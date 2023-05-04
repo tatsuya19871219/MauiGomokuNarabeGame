@@ -1,0 +1,17 @@
+@startuml GomokuNarabe
+class MainPage
+{
+    + MainPage(vm : GomokuNarabeViewModel)
+}
+
+class GomokuNarabeViewModel
+{
+    + GomokuNarabeViewModel()
+    
+}
+
+class GomokuNarabe
+{
+    + GomokuNarabe()
+}
+@enduml
