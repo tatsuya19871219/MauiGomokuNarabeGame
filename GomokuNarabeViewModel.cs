@@ -8,22 +8,24 @@ namespace MauiGomokuNarabeGame;
 public partial class GomokuNarabeViewModel : ObservableObject
 {
 
-    [ObservableProperty] double _pageHeight; // one-way to source
+    //[ObservableProperty] double _pageHeight; // one-way to source
 
-    public ICommand PageSizeChangedCommand { get; }
-    public ICommand SummonCoinCommand { get; }
+    //public ICommand PageSizeChangedCommand { get; }
+    //public ICommand SummonCoinCommand { get; }
 
     public GomokuNarabeViewModel()
     {
-        PageSizeChangedCommand = new Command(PageSizeChanged);
-        SummonCoinCommand = new RelayCommand(SummonCoin);
+        //PageSizeChangedCommand = new RelayCommand(PageSizeChanged);
+        //SummonCoinCommand = new RelayCommand(SummonCoin);
     }
 
-    void PageSizeChanged()
+    [RelayCommand]
+    void PageSizeChanged(Size pageSize)
     {
 
     }
 
+    [RelayCommand]
     void SummonCoin()
     {
         
@@ -34,9 +36,9 @@ public partial class GomokuNarabeViewModel : ObservableObject
     {
         switch (e.PropertyName)
         {
-            case nameof(PageHeight):
+            //case nameof(PageHeight):
                 
-                break;
+              //  break;
 
             default:
                 base.OnPropertyChanged(e);

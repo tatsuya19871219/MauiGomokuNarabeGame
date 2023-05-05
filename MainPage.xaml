@@ -15,12 +15,23 @@
         <x:Int32 x:Key="FieldStacks">7</x:Int32>
         <x:Double x:Key="FieldWidthRequest">450</x:Double>
         <x:Double x:Key="FieldHeightRequest">350</x:Double>
+
+        <local:DoublesToSizeConverter x:Key="DoublesToSizeConverter"/>
     </ContentPage.Resources>
 
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior
             EventName="SizeChanged"
-            Command="{Binding PageSizeChangedCommand}" />
+            Command="{Binding PageSizeChangedCommand}">
+            <toolkit:EventToCommandBehavior.CommandParameter>
+                <MultiBinding Converter="{StaticResource DoublesToSizeConverter}">
+                    <MultiBinding.Bindings>
+                        <Binding Path="Width" Source="{x:Reference Page}"/>
+                        <Binding Path="Height" Source="{x:Reference Page}"/>
+                    </MultiBinding.Bindings>
+                </MultiBinding>
+            </toolkit:EventToCommandBehavior.CommandParameter>
+        </toolkit:EventToCommandBehavior>
     </ContentPage.Behaviors>
 
         <Grid x:Name="GameScreen">          
