@@ -7,7 +7,8 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="MauiGomokuNarabeGame.MainPage"
              x:DataType="local:GomokuNarabeViewModel"
-             x:Name="Page">
+             x:Name="Page"
+             Shell.NavBarIsVisible="False">
 
     <ContentPage.Resources>
         <x:Int32 x:Key="FieldLanes">9</x:Int32>
@@ -57,7 +58,7 @@
                     <views:LaneSelector Grid.Row="0" Grid.Column="{Binding LaneIndex}"
                                         SelectCommand="{Binding Source={x:RelativeSource AncestorType={x:Type local:GomokuNarabeViewModel}},
                                                                 Path=SummonCoinCommand}"
-                                        LaneIndex="{Binding LaneIndex}"/>
+                                        LaneIndex="{Binding LaneIndex}" IsVisible="True"/>
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
 
@@ -82,7 +83,20 @@
         <Grid x:Name="StockAreaYellow"
                 Grid.Row="0" Grid.RowSpan="2"
                 Grid.Column="2" BackgroundColor="Yellow"/>
-        
+
+        <Grid.Triggers>
+            <DataTrigger TargetType="Grid"
+                             Binding="{Binding NextCoin}"
+                             Value="{x:Static model:Coin.RedCoin}">
+                <Setter TargetName="StockAreaYellow" Property="Opacity" Value="0.2"/>
+            </DataTrigger>
+            <DataTrigger TargetType="Grid"
+                             Binding="{Binding NextCoin}"
+                             Value="{x:Static model:Coin.YellowCoin}">
+                <Setter TargetName="StockAreaRed" Property="Opacity" Value="0.2"/>
+            </DataTrigger>
+        </Grid.Triggers>
+
     </Grid>
 
 </ContentPage>

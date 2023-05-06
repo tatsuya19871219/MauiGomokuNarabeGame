@@ -23,7 +23,7 @@ public class GomokuNarabe
     void PushAt(int laneIndex)
     {
         Lanes[laneIndex].StackCoin(NextCoin);
-        NextCoin.Next();
+        NextCoin = NextCoin.Next();
     }
 
     public bool TryPushAt(int laneIndex)
