@@ -14,6 +14,7 @@ public partial class GomokuNarabeViewModel : ObservableObject
     [ObservableProperty] ColumnDefinitionCollection _fieldColumns;
 
     public ObservableCollection<Lane> Lanes { get; set; } = new();
+    [ObservableProperty] Coin _nextCoin;
 
     int? _fieldLanes;
     int? _filedStacks;
@@ -42,6 +43,8 @@ public partial class GomokuNarabeViewModel : ObservableObject
             FieldColumns.Add(new ColumnDefinition());
         }
 
+        NextCoin = _gomokuNarabe.NextCoin;
+
         return this;
     }
 
@@ -65,7 +68,17 @@ public partial class GomokuNarabeViewModel : ObservableObject
     [RelayCommand]
     void SummonCoin(int laneIndex)
     {
-        
+        Coin coin = _gomokuNarabe.NextCoin;
+
+        var success = _gomokuNarabe.TryPushAt(laneIndex);
+
+        if (!success) return;
+
+        // Send message to animate coin Image
+
+
+        // Update next coin
+        NextCoin = _gomokuNarabe.NextCoin;
     }
 
 }
