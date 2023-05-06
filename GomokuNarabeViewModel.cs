@@ -1,48 +1,82 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.ComponentModel;
-using System.Windows.Input;
+using MauiGomokuNarabeGame.Models;
 
 namespace MauiGomokuNarabeGame;
 
 public partial class GomokuNarabeViewModel : ObservableObject
 {
+    static double s_fieldHeightOccupancy = 0.7;
+    [ObservableProperty] double _coinSize;
+    [ObservableProperty] double _fieldWidth;
+    [ObservableProperty] double _fieldHeight;
+    [ObservableProperty] ColumnDefinitionCollection _fieldColumns;
 
-    //[ObservableProperty] double _pageHeight; // one-way to source
+    public ObservableCollection<int> LaneIndexList { get; set; } = new();
 
-    //public ICommand PageSizeChangedCommand { get; }
-    //public ICommand SummonCoinCommand { get; }
+    public ObservableCollection<Lane> Lanes { get; set; } = new();
+
+    int? _fieldLanes;
+    int? _filedStacks;
+
+    GomokuNarabe _gomokuNarabe;
 
     public GomokuNarabeViewModel()
     {
-        //PageSizeChangedCommand = new RelayCommand(PageSizeChanged);
-        //SummonCoinCommand = new RelayCommand(SummonCoin);
+    }
+
+    public GomokuNarabeViewModel SetFieldSize(int fieldLanes, int fieldStacks)
+    {
+        if (_fieldLanes.HasValue || _filedStacks.HasValue)
+            throw new Exception("Field size is already set. Do not set twice.");
+
+        _fieldLanes = fieldLanes;
+        _filedStacks = fieldStacks;
+
+        _gomokuNarabe = new(fieldLanes, fieldStacks);
+
+        FieldColumns = new();
+
+        foreach(var lane in _gomokuNarabe.Lanes)
+        {
+            Lanes.Add(lane);
+            FieldColumns.Add(new ColumnDefinition());
+        }
+
+        // for (int i=0; i<fieldLanes; i++)
+        // {
+        //     LaneIndexList.Add(i);
+
+        //     var column = new ColumnDefinition();
+
+        //     FieldColumns.Add(column);
+        // }
+
+        return this;
     }
 
     [RelayCommand]
     void PageSizeChanged(Size pageSize)
     {
+        if (_fieldLanes <= 0 || _filedStacks <= 0)
+            throw new Exception("Field size is not set yet.");
 
+        var lanes = _fieldLanes.Value;
+        var stacks = _filedStacks.Value;
+
+        var ratio = (double)lanes/stacks;
+
+        FieldHeight  = s_fieldHeightOccupancy * pageSize.Height;
+        FieldWidth = ratio * FieldHeight;
+
+        CoinSize = FieldHeight/stacks;
     }
 
     [RelayCommand]
-    void SummonCoin()
+    void SummonCoin() //(int laneIndex)
     {
         
     }
 
-
-    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
-    {
-        switch (e.PropertyName)
-        {
-            //case nameof(PageHeight):
-                
-              //  break;
-
-            default:
-                base.OnPropertyChanged(e);
-                break;
-        }
-    }
 }

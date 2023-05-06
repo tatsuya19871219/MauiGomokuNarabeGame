@@ -9,7 +9,7 @@ public partial class MainPage : ContentPage
 		int lanes = (int) Resources["FieldLanes"];
 		int stacks = (int)Resources["FieldStacks"];
 
-		BindingContext = vm;
+		BindingContext = vm.SetFieldSize(lanes, stacks);
 	}
 
 }
