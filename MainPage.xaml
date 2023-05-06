@@ -32,33 +32,50 @@
         </toolkit:EventToCommandBehavior>
     </ContentPage.Behaviors>
 
-        <Grid x:Name="GameScreen">          
+    <Grid x:Name="GameScreen">
+        <!--RowDefinitions="{Binding PageRows}"
+                ColumnDefinitions="{Binding PageColumns}">-->
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="{Binding TouchAreaHeight}"/>
             <RowDefinition Height="{Binding FieldHeight}"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="{Binding PoolAreaWidth}"/>
             <ColumnDefinition Width="{Binding FieldWidth}"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="{Binding PoolAreaWidth}"/>
         </Grid.ColumnDefinitions>
 
+        <!--<Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>-->
+
+        <!--<Grid>
+            <Image Source="frame.png"/>
+        </Grid>-->
 
         <Grid x:Name="TouchArea"
                 Grid.Row="0"
                 Grid.Column="1"
                 BackgroundColor="Cyan" 
                 BindableLayout.ItemsSource="{Binding Lanes}"
-                ColumnDefinitions="{Binding FieldColumns}">
+                ColumnDefinitions="{Binding FieldColumns}"
+            HeightRequest="{Binding TouchAreaHeight}">
             
             <BindableLayout.ItemTemplate>
                 <DataTemplate x:DataType="model:Lane">
                     <views:LaneSelector Grid.Row="0" Grid.Column="{Binding LaneIndex}"
                                         SelectCommand="{Binding Source={x:RelativeSource AncestorType={x:Type local:GomokuNarabeViewModel}},
                                                                 Path=SummonCoinCommand}"
-                                        LaneIndex="{Binding LaneIndex}" IsVisible="True"/>
+                                        LaneIndex="{Binding LaneIndex}" IsVisible="{Binding CanStack}"/>
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
 

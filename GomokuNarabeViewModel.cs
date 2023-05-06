@@ -11,13 +11,18 @@ public partial class GomokuNarabeViewModel : ObservableObject
     [ObservableProperty] double _coinSize;
     [ObservableProperty] double _fieldWidth;
     [ObservableProperty] double _fieldHeight;
+    [ObservableProperty] double _touchAreaHeight;
+    [ObservableProperty] double _poolAreaWidth;
+
+    [ObservableProperty] RowDefinitionCollection _pageRows;
+    [ObservableProperty] ColumnDefinitionCollection _pageColumns;
     [ObservableProperty] ColumnDefinitionCollection _fieldColumns;
 
     public ObservableCollection<Lane> Lanes { get; set; } = new();
     [ObservableProperty] Coin _nextCoin;
 
     int? _fieldLanes;
-    int? _filedStacks;
+    int? _fieldStacks;
 
     GomokuNarabe _gomokuNarabe;
 
@@ -27,14 +32,16 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
     public GomokuNarabeViewModel SetFieldSize(int fieldLanes, int fieldStacks)
     {
-        if (_fieldLanes.HasValue || _filedStacks.HasValue)
+        if (_fieldLanes.HasValue || _fieldStacks.HasValue)
             throw new Exception("Field size is already set. Do not set twice.");
 
         _fieldLanes = fieldLanes;
-        _filedStacks = fieldStacks;
+        _fieldStacks = fieldStacks;
 
         _gomokuNarabe = new(fieldLanes, fieldStacks);
 
+        PageRows = new();
+        PageColumns = new();
         FieldColumns = new();
 
         foreach(var lane in _gomokuNarabe.Lanes)
@@ -51,16 +58,28 @@ public partial class GomokuNarabeViewModel : ObservableObject
     [RelayCommand]
     void PageSizeChanged(Size pageSize)
     {
-        if (_fieldLanes <= 0 || _filedStacks <= 0)
+        if (_fieldLanes <= 0 || _fieldStacks <= 0)
             throw new Exception("Field size is not set yet.");
 
         var lanes = _fieldLanes.Value;
-        var stacks = _filedStacks.Value;
+        var stacks = _fieldStacks.Value;
 
         var ratio = (double)lanes/stacks;
 
         FieldHeight  = s_fieldHeightOccupancy * pageSize.Height;
         FieldWidth = ratio * FieldHeight;
+
+        TouchAreaHeight = pageSize.Height - FieldHeight;
+        PoolAreaWidth = (pageSize.Width - FieldWidth) / 2;
+
+        PageRows.Clear();
+        PageRows.Add(new RowDefinition(){ Height = TouchAreaHeight });
+        PageRows.Add(new RowDefinition(){ Height = FieldHeight });
+
+        PageColumns.Clear();
+        PageColumns.Add(new ColumnDefinition(){ Width = PoolAreaWidth });
+        PageColumns.Add(new ColumnDefinition(){ Width = FieldWidth });
+        PageColumns.Add(new ColumnDefinition(){ Width = PoolAreaWidth });
 
         CoinSize = FieldHeight/stacks;
     }
