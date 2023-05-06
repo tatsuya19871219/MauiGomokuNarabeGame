@@ -8,7 +8,7 @@
     
     <Grid BackgroundColor="Transparent">
         <Grid.GestureRecognizers>
-            <TapGestureRecognizer x:Name="MyGesture" Command="{Binding SelectCommand}" Tapped="TapGestureRecognizer_Tapped"/>
+            <TapGestureRecognizer x:Name="MyGesture" Tapped="TapGestureRecognizer_Tapped"/>
         </Grid.GestureRecognizers>
 
         <Image Source="selector_arrow.png"/>

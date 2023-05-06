@@ -13,8 +13,6 @@ public partial class GomokuNarabeViewModel : ObservableObject
     [ObservableProperty] double _fieldHeight;
     [ObservableProperty] ColumnDefinitionCollection _fieldColumns;
 
-    public ObservableCollection<int> LaneIndexList { get; set; } = new();
-
     public ObservableCollection<Lane> Lanes { get; set; } = new();
 
     int? _fieldLanes;
@@ -44,15 +42,6 @@ public partial class GomokuNarabeViewModel : ObservableObject
             FieldColumns.Add(new ColumnDefinition());
         }
 
-        // for (int i=0; i<fieldLanes; i++)
-        // {
-        //     LaneIndexList.Add(i);
-
-        //     var column = new ColumnDefinition();
-
-        //     FieldColumns.Add(column);
-        // }
-
         return this;
     }
 
@@ -74,7 +63,7 @@ public partial class GomokuNarabeViewModel : ObservableObject
     }
 
     [RelayCommand]
-    void SummonCoin() //(int laneIndex)
+    void SummonCoin(int laneIndex)
     {
         
     }

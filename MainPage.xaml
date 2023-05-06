@@ -56,7 +56,8 @@
                 <DataTemplate x:DataType="model:Lane">
                     <views:LaneSelector Grid.Row="0" Grid.Column="{Binding LaneIndex}"
                                         SelectCommand="{Binding Source={x:RelativeSource AncestorType={x:Type local:GomokuNarabeViewModel}},
-                                                                Path=SummonCoinCommand}"/>
+                                                                Path=SummonCoinCommand}"
+                                        LaneIndex="{Binding LaneIndex}"/>
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
 
@@ -69,15 +70,7 @@
 
 
             <Grid>
-                <Image Source="frame.png"/>
-                <!--<views:LaneSelector SelectCommand="{Binding SummonCoinCommand}"/>-->
-                <Grid BackgroundColor="Transparent">
-                    <Grid.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SummonCoinCommand}"/>
-                    </Grid.GestureRecognizers>
-
-                    <Image Source="selector_arrow.png"/>
-                </Grid>
+                <Image Source="frame.png"/>                
             </Grid>
                   
         </Grid>
