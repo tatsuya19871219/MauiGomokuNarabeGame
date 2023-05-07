@@ -34,8 +34,6 @@
     </ContentPage.Behaviors>
 
     <Grid x:Name="GameScreen">
-        <!--RowDefinitions="{Binding PageRows}"
-                ColumnDefinitions="{Binding PageColumns}">-->
 
         <Grid.RowDefinitions>
             <RowDefinition Height="{Binding TouchAreaHeight}"/>
@@ -47,21 +45,6 @@
             <ColumnDefinition Width="{Binding FieldWidth}"/>
             <ColumnDefinition Width="{Binding PoolAreaWidth}"/>
         </Grid.ColumnDefinitions>
-
-        <!--<Grid.RowDefinitions>
-            <RowDefinition Height="100" />
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="100"/>
-        </Grid.ColumnDefinitions>-->
-
-        <!--<Grid>
-            <Image Source="frame.png"/>
-        </Grid>-->
 
         <Grid x:Name="TouchArea"
                 Grid.Row="0"
@@ -87,10 +70,10 @@
                 Grid.Column="1"
                 BackgroundColor="BlanchedAlmond">
 
-
-            <Grid>
-                <Image Source="frame.png"/>                
-            </Grid>
+            <views:GameField Lanes="{StaticResource FieldLanes}" Stacks="{StaticResource FieldStacks}"
+                             CoinSize="{Binding CoinSize}"/>
+         
+            <Image Source="frame.png"/>                
                   
         </Grid>
 
@@ -100,7 +83,7 @@
             <views:CoinPool CoinImageFilename="coin_red.png" 
                             PoolCapacity="{StaticResource CoinPoolCapacity}" 
                             CoinSize="{Binding CoinSize}"
-                            PooledCoin="RedCoin"/>
+                            PooledCoin="{x:Static model:Coin.RedCoin}"/>
         </Grid>
 
         <Grid x:Name="StockAreaYellow"
@@ -109,7 +92,7 @@
             <views:CoinPool CoinImageFilename="coin_yellow.png" 
                             PoolCapacity="{StaticResource CoinPoolCapacity}" 
                             CoinSize="{Binding CoinSize}"
-                            PooledCoin="YellowCoin"/>
+                            PooledCoin="{x:Static model:Coin.YellowCoin}"/>
         </Grid>
 
         <Grid.Triggers>

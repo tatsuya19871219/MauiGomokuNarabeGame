@@ -98,6 +98,8 @@ public partial class GomokuNarabeViewModel : ObservableObject
         // Send message to animate coin Image
         Image coinImage = StrongReferenceMessenger.Default.Send(new PopCoinMessage() { RequestCoin = coin });
 
+        StrongReferenceMessenger.Default.Send(new InsertCoinMessage(coinImage) { TargetLane = laneIndex });
+
         // Update next coin
         NextCoin = _gomokuNarabe.NextCoin;
     }

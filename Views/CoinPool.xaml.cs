@@ -50,7 +50,7 @@ public partial class CoinPool : ContentView
 
 		StrongReferenceMessenger.Default.Register<PopCoinMessage>(this, (r, m) =>
 		{
-			if (m.RequestCoin.Equals(PooledCoin)) return;
+			if (!m.RequestCoin.Equals(PooledCoin)) return;
 
 			var coinImage = _coinImages.Pop();
 

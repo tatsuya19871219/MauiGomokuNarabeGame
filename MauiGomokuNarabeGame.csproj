@@ -58,6 +58,9 @@
 	  <MauiXaml Update="Views\CoinPool.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\GameField.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\LaneSelector.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
