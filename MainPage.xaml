@@ -99,7 +99,8 @@
                 Grid.Column="0" BackgroundColor="LightPink">
             <views:CoinPool CoinImageFilename="coin_red.png" 
                             PoolCapacity="{StaticResource CoinPoolCapacity}" 
-                            CoinSize="{Binding CoinSize}"/>
+                            CoinSize="{Binding CoinSize}"
+                            PooledCoin="RedCoin"/>
         </Grid>
 
         <Grid x:Name="StockAreaYellow"
@@ -107,7 +108,8 @@
                 Grid.Column="2" BackgroundColor="Yellow">
             <views:CoinPool CoinImageFilename="coin_yellow.png" 
                             PoolCapacity="{StaticResource CoinPoolCapacity}" 
-                            CoinSize="{Binding CoinSize}"/>
+                            CoinSize="{Binding CoinSize}"
+                            PooledCoin="YellowCoin"/>
         </Grid>
 
         <Grid.Triggers>

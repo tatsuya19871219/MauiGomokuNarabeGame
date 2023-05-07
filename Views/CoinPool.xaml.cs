@@ -1,3 +1,6 @@
+using CommunityToolkit.Mvvm.Messaging;
+using MauiGomokuNarabeGame.Messages;
+using MauiGomokuNarabeGame.Models;
 using System.Runtime.CompilerServices;
 
 namespace MauiGomokuNarabeGame.Views;
@@ -11,6 +14,8 @@ public partial class CoinPool : ContentView
 		= BindableProperty.Create(nameof(PoolCapacity), typeof(int), typeof(CoinPool));
 	public static readonly BindableProperty CoinSizeProperty
 		= BindableProperty.Create(nameof(CoinSize), typeof(double), typeof(CoinPool));
+	public static readonly BindableProperty PooledCoinProperty
+		= BindableProperty.Create(nameof(PooledCoin), typeof(Coin), typeof(CoinPool));
 
 	public string CoinImageFilename
 	{
@@ -29,6 +34,12 @@ public partial class CoinPool : ContentView
 		get => (double)GetValue(CoinSizeProperty);
 		set => SetValue(CoinSizeProperty, value);
 	}
+
+	public Coin PooledCoin
+	{
+		get => (Coin)GetValue(PooledCoinProperty);
+		set => SetValue(PooledCoinProperty, value);
+	}
     #endregion
 
     Stack<Image> _coinImages = new();
@@ -37,7 +48,16 @@ public partial class CoinPool : ContentView
 	{
 		InitializeComponent();
 
-		//FillPool();
+		StrongReferenceMessenger.Default.Register<PopCoinMessage>(this, (r, m) =>
+		{
+			if (m.RequestCoin.Equals(PooledCoin)) return;
+
+			var coinImage = _coinImages.Pop();
+
+			Pool.Remove(coinImage);
+
+			m.Reply(coinImage);
+		});
 	}
 
     protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -106,7 +126,7 @@ public partial class CoinPool : ContentView
         x = x0;
         y = y0;
 
-        foreach (var coinImage in _coinImages)
+        foreach (var coinImage in _coinImages.Reverse())
         {
             coinImage.TranslationX = x;
             coinImage.TranslationY = y;

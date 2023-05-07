@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using MauiGomokuNarabeGame.Messages;
 using MauiGomokuNarabeGame.Models;
 
 namespace MauiGomokuNarabeGame;
@@ -94,7 +96,7 @@ public partial class GomokuNarabeViewModel : ObservableObject
         if (!success) return;
 
         // Send message to animate coin Image
-
+        Image coinImage = StrongReferenceMessenger.Default.Send(new PopCoinMessage() { RequestCoin = coin });
 
         // Update next coin
         NextCoin = _gomokuNarabe.NextCoin;
