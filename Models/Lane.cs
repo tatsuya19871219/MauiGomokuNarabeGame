@@ -1,9 +1,13 @@
-﻿namespace MauiGomokuNarabeGame.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-public class Lane
+namespace MauiGomokuNarabeGame.Models;
+
+public partial class Lane : ObservableObject
 {
     public int LaneIndex { get; private set; }
-    public bool CanStack { get; private set; }
+    //public bool CanStack { get; private set; }
+    [ObservableProperty] bool _canStack;
+
     readonly int _stacks;
     public List<Coin> StackedCoins { get; init; } = new();
     public int CurrentPosition => StackedCoins.Count();

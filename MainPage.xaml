@@ -13,6 +13,7 @@
     <ContentPage.Resources>
         <x:Int32 x:Key="FieldLanes">9</x:Int32>
         <x:Int32 x:Key="FieldStacks">7</x:Int32>
+        <x:Int32 x:Key="CoinPoolCapacity">35</x:Int32>
 
         <local:DoublesToSizeConverter x:Key="DoublesToSizeConverter"/>
     </ContentPage.Resources>
@@ -95,11 +96,19 @@
 
         <Grid x:Name="StockAreaRed"
                 Grid.Row="0" Grid.RowSpan="2"
-                Grid.Column="0" BackgroundColor="Red"/>
+                Grid.Column="0" BackgroundColor="LightPink">
+            <views:CoinPool CoinImageFilename="coin_red.png" 
+                            PoolCapacity="{StaticResource CoinPoolCapacity}" 
+                            CoinSize="{Binding CoinSize}"/>
+        </Grid>
 
         <Grid x:Name="StockAreaYellow"
                 Grid.Row="0" Grid.RowSpan="2"
-                Grid.Column="2" BackgroundColor="Yellow"/>
+                Grid.Column="2" BackgroundColor="Yellow">
+            <views:CoinPool CoinImageFilename="coin_yellow.png" 
+                            PoolCapacity="{StaticResource CoinPoolCapacity}" 
+                            CoinSize="{Binding CoinSize}"/>
+        </Grid>
 
         <Grid.Triggers>
             <DataTrigger TargetType="Grid"

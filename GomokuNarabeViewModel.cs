@@ -7,7 +7,7 @@ namespace MauiGomokuNarabeGame;
 
 public partial class GomokuNarabeViewModel : ObservableObject
 {
-    static double s_fieldHeightOccupancy = 0.7;
+    static double s_fieldHeightOccupancy = 0.8;
     [ObservableProperty] double _coinSize;
     [ObservableProperty] double _fieldWidth;
     [ObservableProperty] double _fieldHeight;
