@@ -107,7 +107,8 @@ public partial class GomokuNarabeViewModel : ObservableObject
     [RelayCommand]
     void ResetGame()
     {
-        
+        _gomokuNarabe.Reset();
+        StrongReferenceMessenger.Default.Send(new ResetMessage("reset"));
     }
 
 }

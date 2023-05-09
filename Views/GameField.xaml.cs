@@ -33,15 +33,15 @@ public partial class GameField : ContentView
     }
     #endregion
 
-
-    List<int> _stackPosition = new();
+    List<Queue<Image>> _coinQueues = new();
+    //List<int> _stackPosition = new();
 
     public GameField()
 	{
 		InitializeComponent();
 
-        FieldGrid.HorizontalOptions = LayoutOptions.Start;
-        FieldGrid.VerticalOptions = LayoutOptions.Start;
+        //FieldGrid.HorizontalOptions = LayoutOptions.Start;
+        //FieldGrid.VerticalOptions = LayoutOptions.Start;
 
         StrongReferenceMessenger.Default.Register<InsertCoinMessage>(this, (r, m) =>
         {
@@ -50,22 +50,52 @@ public partial class GameField : ContentView
             Image coinImage = m.Value;
 
             coinImage.TranslationX = targetLane * CoinSize;
-            coinImage.TranslationY = Height - CoinSize*(_stackPosition[targetLane] + 1);
+            coinImage.TranslationY = Height - CoinSize*(_coinQueues[targetLane].Count + 1);
 
             FieldGrid.Add(coinImage);
 
-            _stackPosition[targetLane]++;
+            _coinQueues[targetLane].Enqueue(coinImage);
 
         });
+
+        StrongReferenceMessenger.Default.Register<ResetMessage>(this, async (r, m) =>
+        {
+            foreach (var queue in _coinQueues)
+            {
+                RemoveCoinsAsync(queue);
+            }
+
+            await Task.Delay(0);
+        });
 	}
+
+    async Task RemoveCoinsAsync(Queue<Image> queue)
+    {
+        while (queue.Count > 0)
+        {
+            var image = queue.Dequeue();
+            
+            Task.Run(() => DropCoin(image));
+            
+            await Task.Delay(100);
+        }
+    }
+
+    async Task DropCoin(Image image)
+    {
+        await image.TranslateTo(image.TranslationX, image.TranslationY + Height, 250);
+        FieldGrid.Remove(image);
+    }
 
     protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
     {
         switch (propertyName)
         {
             case nameof(Lanes):
-                _stackPosition.Clear();
-                for (int i = 0; i < Lanes; i++) _stackPosition.Add(0);
+                
+                _coinQueues.Clear();
+                for (int i = 0; i < Lanes; i++) _coinQueues.Add(new());
+                                                
                 break;
 
             default:

@@ -58,6 +58,12 @@ public partial class CoinPool : ContentView
 
 			m.Reply(coinImage);
 		});
+
+		StrongReferenceMessenger.Default.Register<ResetMessage>(this, (r, m) =>
+		{
+			FillPool();
+			UpdateCoinTranslation();
+		});
 	}
 
     protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -80,14 +86,14 @@ public partial class CoinPool : ContentView
 
     void FillPool()
 	{
-		Pool.HorizontalOptions = LayoutOptions.Start;
-		Pool.VerticalOptions = LayoutOptions.Start;
+		//Pool.HorizontalOptions = LayoutOptions.Start;
+		//Pool.VerticalOptions = LayoutOptions.Start;
 
 		//var coinFactory = (double x, double y) 
 		//	=> new Image() { Source = "coin_red.png", WidthRequest = 50, HeightRequest = 50,
 		//					TranslationX = x, TranslationY = y};
 
-		for (int i = 0; i < PoolCapacity; i++)
+		for (int i = _coinImages.Count; i < PoolCapacity; i++)
 		{
 			//var coinImage = coinFactory(0, 0);
 			var coinImage = GenerateCoin();

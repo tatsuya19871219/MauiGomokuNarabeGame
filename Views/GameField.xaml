@@ -2,7 +2,8 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiGomokuNarabeGame.Views.GameField">
-    <Grid x:Name="FieldGrid" BackgroundColor="Transparent">
+    <Grid x:Name="FieldGrid" BackgroundColor="Transparent"
+          HorizontalOptions="Start" VerticalOptions="Start">
         
     </Grid>
 </ContentView>

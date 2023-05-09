@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiGomokuNarabeGame.Views.CoinPool"
              SizeChanged="ContentView_SizeChanged">
-    <Grid x:Name="Pool">
+    <Grid x:Name="Pool"
+          HorizontalOptions="Start" VerticalOptions="Start">
         
     </Grid>
 </ContentView>
