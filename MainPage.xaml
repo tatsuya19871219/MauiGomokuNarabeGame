@@ -70,6 +70,10 @@
                 Grid.Column="1"
                 BackgroundColor="BlanchedAlmond">
 
+            <Grid.GestureRecognizers>
+                <SwipeGestureRecognizer Direction="Down" Command="{Binding ResetGameCommand}"/>
+            </Grid.GestureRecognizers>
+
             <views:GameField Lanes="{StaticResource FieldLanes}" Stacks="{StaticResource FieldStacks}"
                              CoinSize="{Binding CoinSize}"/>
          

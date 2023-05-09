@@ -104,4 +104,10 @@ public partial class GomokuNarabeViewModel : ObservableObject
         NextCoin = _gomokuNarabe.NextCoin;
     }
 
+    [RelayCommand]
+    void ResetGame()
+    {
+        
+    }
+
 }
