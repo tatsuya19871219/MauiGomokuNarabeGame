@@ -6,12 +6,71 @@ class MainPage
 
 class GomokuNarabeViewModel
 {
+    + CoinSize : double <<Observable>>
+    + FieldWidth : double <<Observable>>
+    + FieldHeight : double <<Observable>>
+    + FieldColumns : double <<Observable>>
+    + Lanes : ObservableCollection<Lane> 
+    + NextCoin : Coin <<Observable>>
+    - gomokuNarabe : GomokuNarabe 
     + GomokuNarabeViewModel()
-    
+    + SetFieldSize(fieldLanes : int, fieldStacks : int) : GomokuNarabeViewModel
+    - PageSizeChanged(pageSize : Size) : void <<RelayCommand>>
+    - SummonCoin(laneIndex : int) : void <<RelayCommand>>
+    - ResetGame() : void <<RelayCommand>>
 }
 
 class GomokuNarabe
 {
-    + GomokuNarabe()
+    ~ NextCoin : Coin
+    - lanes : int
+    - stacks : int
+    ~ Lanes : List<Lane>
+    + GomokuNarabe(lanes : int, stacks : int, firstCoin : Coin)
+    - PushAt(laneIndex : int) : void
+    + TryPushAt(laneIndex : int) : bool
+    + Reset() : void
 }
+
+enum Coin
+{
+    RedCoin
+    YellowCoin
+    {static} + Next(coin : this Coin) : Coin
+}
+
+class Lane
+{
+    + LaneIndex : int
+    - stacks : int
+    + CanStack : bool
+    + StackedCoins : List<Coin>
+    + CurrentPosition : int
+    + Lane(laneIndex : int, stacks : int)
+    + StackCoin(coin : Coin) : void
+    + Reset() : void
+}
+
+' 
+MainPage ..> GomokuNarabeViewModel : <use>
+GomokuNarabeViewModel --> GomokuNarabe
+
+@enduml
+
+@startuml CoinInsertSequence
+
+LaneSelector -> ViewModel : SummonCoin (ICommand)
+ViewModel -> CoinPool : PopCoin Request (Message)
+CoinPool -> ViewModel : Coin (Image)
+ViewModel -> GameField : InsertCoin (Message)
+
+@enduml
+
+@startuml GameResetSequence
+
+GameField -> ViewModel : ResetGame (ICommand)
+ViewModel -> Model : Reset (Method)
+ViewModel -> GameField : Reset (Message)
+ViewModel -> CoinPool : Reset (Message)
+
 @enduml
