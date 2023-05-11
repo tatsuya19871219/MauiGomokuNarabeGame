@@ -51,8 +51,7 @@
                 Grid.Column="1"
                 BackgroundColor="Cyan" 
                 BindableLayout.ItemsSource="{Binding Lanes}"
-                ColumnDefinitions="{Binding FieldColumns}"
-            HeightRequest="{Binding TouchAreaHeight}">
+                ColumnDefinitions="{Binding FieldColumns}">
             
             <BindableLayout.ItemTemplate>
                 <DataTemplate x:DataType="model:Lane">
@@ -68,7 +67,9 @@
         <Grid x:Name="GameField" 
                 Grid.Row="1"
                 Grid.Column="1"
-                BackgroundColor="BlanchedAlmond">
+                BackgroundColor="BlanchedAlmond"
+                WidthRequest="{Binding FieldWidth}"
+                HeightRequest="{Binding FieldHeight}">
 
             <Grid.GestureRecognizers>
                 <SwipeGestureRecognizer Direction="Down" Command="{Binding ResetGameCommand}"/>

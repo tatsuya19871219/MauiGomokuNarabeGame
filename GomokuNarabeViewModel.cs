@@ -16,8 +16,6 @@ public partial class GomokuNarabeViewModel : ObservableObject
     [ObservableProperty] double _touchAreaHeight;
     [ObservableProperty] double _poolAreaWidth;
 
-    [ObservableProperty] RowDefinitionCollection _pageRows;
-    [ObservableProperty] ColumnDefinitionCollection _pageColumns;
     [ObservableProperty] ColumnDefinitionCollection _fieldColumns;
 
     public ObservableCollection<Lane> Lanes { get; set; } = new();
@@ -42,8 +40,6 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
         _gomokuNarabe = new(fieldLanes, fieldStacks);
 
-        PageRows = new();
-        PageColumns = new();
         FieldColumns = new();
 
         foreach(var lane in _gomokuNarabe.Lanes)
@@ -73,15 +69,6 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
         TouchAreaHeight = pageSize.Height - FieldHeight;
         PoolAreaWidth = (pageSize.Width - FieldWidth) / 2;
-
-        PageRows.Clear();
-        PageRows.Add(new RowDefinition(){ Height = TouchAreaHeight });
-        PageRows.Add(new RowDefinition(){ Height = FieldHeight });
-
-        PageColumns.Clear();
-        PageColumns.Add(new ColumnDefinition(){ Width = PoolAreaWidth });
-        PageColumns.Add(new ColumnDefinition(){ Width = FieldWidth });
-        PageColumns.Add(new ColumnDefinition(){ Width = PoolAreaWidth });
 
         CoinSize = FieldHeight/stacks;
     }
