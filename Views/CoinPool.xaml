@@ -2,8 +2,10 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiGomokuNarabeGame.Views.CoinPool"
-             SizeChanged="ContentView_SizeChanged">
+             SizeChanged="ContentView_SizeChanged"
+             x:Name="this">
     <Grid x:Name="Pool"
+            BindingContext="{x:Reference this}"
           HorizontalOptions="Start" VerticalOptions="Start">
         
     </Grid>
