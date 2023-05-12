@@ -3,15 +3,43 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="using:MauiGomokuNarabeGame"
              xmlns:view="clr-namespace:MauiGomokuNarabeGame.Views"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="MauiGomokuNarabeGame.Views.LaneSelector"
-             x:DataType="view:LaneSelector">
+             x:Name="this">
+    <!--x:DataType="view:LaneSelector">-->
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+        </ResourceDictionary>
+    </ContentView.Resources>
     
-    <Grid BackgroundColor="Transparent">
+    <Grid BackgroundColor="Transparent" BindingContext="{x:Reference this}">
         <Grid.GestureRecognizers>
             <TapGestureRecognizer x:Name="MyGesture" Tapped="TapGestureRecognizer_Tapped"/>
         </Grid.GestureRecognizers>
 
-        <Image Source="selector_arrow.png"/>
+        <!--<Grid.Triggers>
+            <DataTrigger TargetType="Image" Binding="{Binding SelectorDisabled}" Value="False">
+                <Setter TargetName="SelectorArrow" Property="IsVisible" Value="True"/>
+                <Setter TargetName="DisabledMark" Property="IsVisible" Value="False"/>
+            </DataTrigger>
+            <DataTrigger TargetType="Image" Binding="{Binding SelectorDisabled}" Value="True">
+                <Setter TargetName="SelectorArrow" Property="IsVisible" Value="False"/>
+                <Setter TargetName="DisabledMark" Property="IsVisible" Value="True"/>
+            </DataTrigger>
+        </Grid.Triggers>-->
+
+        <Image x:Name="SelectorArrow" Source="selector_arrow.png" IsVisible="{Binding SelectorDisabled, Converter={StaticResource InvertedBoolConverter}}"/>
+
+        <Image x:Name="DisabledMark" Source="selector_disabled.png" IsVisible="{Binding SelectorDisabled}"/>
+
+        <!-- <Label Text="{Binding LaneIndex}" FontSize="24"/> -->
+
+        <!-- <Switch IsToggled="{Binding SelectorDisabled, Mode=OneWay}"/> -->
+
+        <!--<Label Text="{Binding SelectorDisabled, StringFormat='Me is {0:G}'}" FontSize="24"/>-->
+
     </Grid>
 
 </ContentView>

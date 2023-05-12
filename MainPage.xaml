@@ -58,7 +58,7 @@
                     <views:LaneSelector Grid.Row="0" Grid.Column="{Binding LaneIndex}"
                                         SelectCommand="{Binding Source={x:RelativeSource AncestorType={x:Type local:GomokuNarabeViewModel}},
                                                                 Path=SummonCoinCommand}"
-                                        LaneIndex="{Binding LaneIndex}" IsVisible="{Binding CanStack}"/>
+                                        LaneIndex="{Binding LaneIndex}" SelectorDisabled="{Binding CanStack, Converter={toolkit:InvertedBoolConverter}}"/>
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
 
