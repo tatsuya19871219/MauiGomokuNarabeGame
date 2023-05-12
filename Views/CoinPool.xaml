@@ -5,7 +5,7 @@
              SizeChanged="ContentView_SizeChanged"
              x:Name="this">
     <Grid x:Name="Pool"
-            BindingContext="{x:Reference this}"
+          BindingContext="{x:Reference this}"
           HorizontalOptions="Start" VerticalOptions="Start">
         
     </Grid>

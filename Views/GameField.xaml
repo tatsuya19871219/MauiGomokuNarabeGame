@@ -4,7 +4,7 @@
              x:Class="MauiGomokuNarabeGame.Views.GameField"
              x:Name="this">
     <Grid x:Name="FieldGrid" BackgroundColor="Transparent"
-            BindingContext="{x:Reference this}"
+          BindingContext="{x:Reference this}"
           HorizontalOptions="Start" VerticalOptions="Start">
         
     </Grid>
