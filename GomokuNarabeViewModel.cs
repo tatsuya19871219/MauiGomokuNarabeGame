@@ -52,8 +52,6 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
         NextCoin = _gomokuNarabe.NextCoin;
 
-        //StrongReferenceMessenger.Default.Send(new FillPoolMessage("fill"));
-
         return this;
     }
 

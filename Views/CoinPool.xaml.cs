@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using MauiGomokuNarabeGame.Messages;
 using MauiGomokuNarabeGame.Models;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
 
 namespace MauiGomokuNarabeGame.Views;
 
@@ -50,6 +51,14 @@ public partial class CoinPool : ContentView
 	{
 		get => (Coin)GetValue(PooledCoinProperty);
 		set => SetValue(PooledCoinProperty, value);
+	}
+
+	public static readonly BindableProperty OnReadyCommandProperty =
+		BindableProperty.Create(nameof(OnReadyCommand), typeof(ICommand), typeof(CoinPool));
+	public ICommand OnReadyCommand
+	{
+		get => (ICommand)GetValue(OnReadyCommandProperty);
+		set => SetValue(OnReadyCommandProperty, value);
 	}
     #endregion
 
