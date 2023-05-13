@@ -74,3 +74,13 @@ ViewModel -> GameField : Reset (Message)
 ViewModel -> CoinPool : Reset (Message)
 
 @enduml
+
+@startuml AppState
+
+hide empty description
+[*] -> Initial : On entry initialization
+Initial -> OnGame : Enable gesture recognizer
+OnGame --> Final : Reset
+Final --> Initial : Clean game field
+
+@enduml
