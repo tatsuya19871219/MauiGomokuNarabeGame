@@ -57,21 +57,33 @@ GomokuNarabeViewModel --> GomokuNarabe
 
 @enduml
 
-@startuml CoinInsertSequence
+@startuml SequenceDiagram
 
+boundary LaneSelector
+control ViewModel
+
+
+group Initialize
+ViewModel -> CoinPool : FillPool (Message)
+end
+
+group Coin insertion
 LaneSelector -> ViewModel : SummonCoin (ICommand)
 ViewModel -> CoinPool : PopCoin Request (Message)
 CoinPool -> ViewModel : Coin (Image)
 ViewModel -> GameField : InsertCoin (Message)
+opt Lane stack is full
+ViewModel -> LaneSelector : DisableLane (Message)
+end
+end
 
-@enduml
-
-@startuml GameResetSequence
-
+group Game reset
 GameField -> ViewModel : ResetGame (ICommand)
-ViewModel -> Model : Reset (Method)
-ViewModel -> GameField : Reset (Message)
-ViewModel -> CoinPool : Reset (Message)
+'ViewModel -> Model : Reset (Method)
+ViewModel -> GameField : ClearField (Message)
+'ViewModel -> GameField : Reset (Message)
+'ViewModel -> CoinPool : Reset (Message)
+end
 
 @enduml
 
@@ -80,7 +92,7 @@ ViewModel -> CoinPool : Reset (Message)
 hide empty description
 [*] -> Initial : On entry initialization
 Initial -> OnGame : Enable gesture recognizer
-OnGame --> Final : Reset
-Final --> Initial : Clean game field
+OnGame --> Final : Disable gesture recognizer
+Final --> Initial : Clean game field, \n(Re)Fill coin pool
 
 @enduml
