@@ -13,6 +13,21 @@
         </ResourceDictionary>
     </ContentView.Resources>
 
+    <VisualStateManager.VisualStateGroups>
+        <VisualStateGroup>
+            <VisualState x:Name="Enable">
+                <VisualState.Setters>
+                    <Setter TargetName="SelectorArrow" Property="IsVisible" Value="True"/>
+                </VisualState.Setters>
+            </VisualState>
+            <VisualState x:Name="Disable">
+                <VisualState.Setters>
+                    <Setter TargetName="DisabledMark" Property="IsVisible" Value="True"/>
+                </VisualState.Setters>
+            </VisualState>
+        </VisualStateGroup>
+    </VisualStateManager.VisualStateGroups>
+
     <Grid BackgroundColor="Transparent" 
           BindingContext="{x:Reference this}" x:DataType="view:LaneSelector">
 
@@ -20,9 +35,9 @@
             <TapGestureRecognizer x:Name="MyGesture" Tapped="TapGestureRecognizer_Tapped"/>
         </Grid.GestureRecognizers>
 
-        <Image x:Name="SelectorArrow" Source="selector_arrow.png" IsVisible="{Binding SelectorDisabled, Converter={StaticResource InvertedBoolConverter}}"/>
+        <Image x:Name="SelectorArrow" Source="selector_arrow.png" IsVisible="False"/>
 
-        <Image x:Name="DisabledMark" Source="selector_disabled.png" IsVisible="{Binding SelectorDisabled}"/>
+        <Image x:Name="DisabledMark" Source="selector_disabled.png" IsVisible="False"/>
 
         <!-- <Label Text="{Binding LaneIndex}" FontSize="24"/> -->
 

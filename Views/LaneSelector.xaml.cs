@@ -9,8 +9,8 @@ public partial class LaneSelector : ContentView
         BindableProperty.Create(nameof(SelectCommand), typeof(ICommand), typeof(LaneSelector));
     public static readonly BindableProperty LaneIndexProperty =
         BindableProperty.Create(nameof(LaneIndex), typeof(int), typeof(LaneSelector));
-    public static readonly BindableProperty SelectorDisabledProperty =
-        BindableProperty.Create(nameof(SelectorDisabled), typeof(bool), typeof(LaneSelector));
+    //static readonly BindableProperty SelectorDisabledProperty =
+    //    BindableProperty.Create(nameof(SelectorDisabled), typeof(bool), typeof(LaneSelector));
 
     public ICommand SelectCommand
     {
@@ -24,19 +24,21 @@ public partial class LaneSelector : ContentView
         set => SetValue(LaneIndexProperty, value);
     }
 
-    public bool SelectorDisabled
-    {
-        get => (bool)GetValue(SelectorDisabledProperty);
-        set => SetValue(SelectorDisabledProperty, value);
-    }
+    //bool SelectorDisabled
+    //{
+    //    get => (bool)GetValue(SelectorDisabledProperty);
+    //    set => SetValue(SelectorDisabledProperty, value);
+    //}
 
     public LaneSelector()
 	{
 		InitializeComponent();
 
-		//BindingContext = this;
+        //BindingContext = this;
 
         //SelectorDisabled = true;
+
+        VisualStateManager.GoToState(this, "Enable");
 	}
 
 
