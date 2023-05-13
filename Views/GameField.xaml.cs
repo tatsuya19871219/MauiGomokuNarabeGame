@@ -58,7 +58,7 @@ public partial class GameField : ContentView
 
         });
 
-        StrongReferenceMessenger.Default.Register<ResetMessage>(this, async (r, m) =>
+        StrongReferenceMessenger.Default.Register<ClearFieldMessage>(this, async (r, m) =>
         {
             foreach (var queue in _coinQueues)
             {

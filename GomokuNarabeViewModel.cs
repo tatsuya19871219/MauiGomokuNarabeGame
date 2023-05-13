@@ -20,6 +20,7 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
     public ObservableCollection<Lane> Lanes { get; set; } = new();
     [ObservableProperty] Coin _nextCoin;
+    [ObservableProperty] bool _inputEnabled;
 
     int? _fieldLanes;
     int? _fieldStacks;
@@ -28,6 +29,7 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
     public GomokuNarabeViewModel()
     {
+        InputEnabled = false;
     }
 
     public GomokuNarabeViewModel SetFieldSize(int fieldLanes, int fieldStacks)
@@ -49,6 +51,8 @@ public partial class GomokuNarabeViewModel : ObservableObject
         }
 
         NextCoin = _gomokuNarabe.NextCoin;
+
+        //StrongReferenceMessenger.Default.Send(new FillPoolMessage("fill"));
 
         return this;
     }
@@ -95,7 +99,8 @@ public partial class GomokuNarabeViewModel : ObservableObject
     void ResetGame()
     {
         _gomokuNarabe.Reset();
-        StrongReferenceMessenger.Default.Send(new ResetMessage("reset"));
+        StrongReferenceMessenger.Default.Send(new ClearFieldMessage("reset"));
+        StrongReferenceMessenger.Default.Send(new FillPoolMessage("fill"));
     }
 
 }

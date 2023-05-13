@@ -10,8 +10,8 @@ public partial class CoinPool : ContentView
     #region Bindable properties
     public static readonly BindableProperty CoinImageFilenameProperty
 		= BindableProperty.Create(nameof(CoinImageFilename), typeof(string), typeof(CoinPool));
-	public static readonly BindableProperty PoolCapacityProperty
-		= BindableProperty.Create(nameof(PoolCapacity), typeof(int), typeof(CoinPool));
+	// public static readonly BindableProperty PoolCapacityProperty
+	// 	= BindableProperty.Create(nameof(PoolCapacity), typeof(int), typeof(CoinPool));
 	public static readonly BindableProperty CoinSizeProperty
 		= BindableProperty.Create(nameof(CoinSize), typeof(double), typeof(CoinPool));
 	public static readonly BindableProperty PooledCoinProperty
@@ -23,10 +23,21 @@ public partial class CoinPool : ContentView
 		set => SetValue(CoinImageFilenameProperty, value);
 	}
 
-	public int PoolCapacity
-	{
-		get => (int)GetValue(PoolCapacityProperty);
-		set => SetValue(PoolCapacityProperty, value);
+	// public int PoolCapacity
+	// {
+	// 	get => (int)GetValue(PoolCapacityProperty);
+	// 	set => SetValue(PoolCapacityProperty, value);
+	// }
+	readonly int _poolCapacity;
+
+	required public int PoolCapacity 
+	{ 
+		get => _poolCapacity;
+		init
+		{
+			_poolCapacity = value;
+			FillPool();
+		}
 	}
 
 	public double CoinSize
@@ -59,54 +70,56 @@ public partial class CoinPool : ContentView
 			m.Reply(coinImage);
 		});
 
-		StrongReferenceMessenger.Default.Register<ResetMessage>(this, (r, m) =>
+		StrongReferenceMessenger.Default.Register<FillPoolMessage>(this, (r, m) =>
 		{
-			FillPool();
-			UpdateCoinTranslation();
+			FillPoolAsync();			
 		});
 	}
 
-    protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
-    {
-		switch (propertyName)
-		{
-			//case nameof(CoinImageFilename):
-			//	break;
-
-			case nameof(PoolCapacity):
-				FillPool();
-				break;
-
-			default:
-				base.OnPropertyChanged(propertyName);
-				break;
-		}
-
-    }
-
-    void FillPool()
+	void FillPool()
 	{
-		//Pool.HorizontalOptions = LayoutOptions.Start;
-		//Pool.VerticalOptions = LayoutOptions.Start;
-
-		//var coinFactory = (double x, double y) 
-		//	=> new Image() { Source = "coin_red.png", WidthRequest = 50, HeightRequest = 50,
-		//					TranslationX = x, TranslationY = y};
-
 		for (int i = _coinImages.Count; i < PoolCapacity; i++)
 		{
-			//var coinImage = coinFactory(0, 0);
 			var coinImage = GenerateCoin();
 
             _coinImages.Push(coinImage);
 			Pool.Add(coinImage);
 		}
+
+		if (CoinSize > 0) UpdateCoinTranslation();
+	}
+
+    async void FillPoolAsync()
+	{
+		var coinPositionEnumerator = CoinPositionGenerator().GetEnumerator();
+
+		for (int i = 0; i < PoolCapacity; i++)
+		{
+			coinPositionEnumerator.MoveNext();
+			if (i < _coinImages.Count) continue;
+
+			var (x, y) = coinPositionEnumerator.Current;
+
+			var coinImage = GenerateCoin(x, y);
+
+			coinImage.TranslationY = -100;
+
+			var animationTime = (uint)Math.Abs(Math.Round(y/50));
+
+			_ = Task.Run(() => coinImage.TranslateTo(x, y, animationTime));
+			
+			await Task.Delay(100);
+
+			_coinImages.Push(coinImage);
+
+			Pool.Add(coinImage);
+		}
 		
 	}
 
-	Image GenerateCoin()
+	Image GenerateCoin(double x = 0, double y = 0)
 	{
-		var coin = new Image();
+		var coin = new Image() { TranslationX = x, TranslationY = y };
 
 		coin.SetBinding(Image.SourceProperty, new Binding(nameof(CoinImageFilename), source: this));
 		coin.SetBinding(Image.WidthRequestProperty, new Binding(nameof(CoinSize), source: this));
@@ -124,26 +137,44 @@ public partial class CoinPool : ContentView
 
 	void UpdateCoinTranslation()
 	{
-        double x, y;
+		var coinPositionEnumerator = CoinPositionGenerator().GetEnumerator();
 
-		double x0 = (Width % CoinSize) / 2;
-		double y0 = Height - x0 - CoinSize;
+        foreach (var coinImage in _coinImages.Reverse())
+        {
+			coinPositionEnumerator.MoveNext();
+			var (x, y) = coinPositionEnumerator.Current;
+
+            coinImage.TranslationX = x;
+            coinImage.TranslationY = y;
+        }
+    }
+
+	IEnumerable<Point> CoinPositionGenerator()
+	{
+		if (PoolCapacity <= 0) throw new Exception("Invalid pool capacity.");
+		if (CoinSize <= 0) throw new Exception("Invalid coin size.");
+		if (Width <= 0 || Height <= 0) throw new Exception("Invalid width/height of view");
+
+		double x, y;
+
+        double x0 = (Width % CoinSize) / 2;
+        double y0 = Height - x0 - CoinSize;
 
         x = x0;
         y = y0;
 
-        foreach (var coinImage in _coinImages.Reverse())
-        {
-            coinImage.TranslationX = x;
-            coinImage.TranslationY = y;
+		yield return new(x, y);
 
-            x += CoinSize;
+        for (int i=1; i < PoolCapacity; i++)
+		{
+			x += CoinSize;
             if (x+CoinSize > Width)
             {
                 x = x0;
                 y -= CoinSize;
             }
 
-        }
-    }
+			yield return new(x, y);
+		}
+	}
 }
