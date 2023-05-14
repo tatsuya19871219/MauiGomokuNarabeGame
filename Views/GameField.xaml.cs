@@ -1,9 +1,6 @@
 using CommunityToolkit.Mvvm.Messaging;
 using MauiGomokuNarabeGame.Helpers;
 using MauiGomokuNarabeGame.Messages;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
 
 namespace MauiGomokuNarabeGame.Views;
 
@@ -30,18 +27,7 @@ public partial class GameField : ContentView
         get => (double)GetValue(CoinSizeProperty);
         set => SetValue(CoinSizeProperty, value);
     }
-    // public static readonly BindableProperty OnReadyCommandProperty =
-	// 	BindableProperty.Create(nameof(OnReadyCommand), typeof(ICommand), typeof(CoinPool));
-	// public ICommand OnReadyCommand
-	// {
-	// 	get => (ICommand)GetValue(OnReadyCommandProperty);
-	// 	set
-    //     {
-    //         SetValue(OnReadyCommandProperty, value);
-    //         Debug.WriteLine("On ready command is set"); // does not hit
-    //     }
-	// }
-
+    
     readonly int _lanes;
     required public int Lanes
     {
@@ -61,12 +47,6 @@ public partial class GameField : ContentView
 	{
 		InitializeComponent();
 
-        // new ConditionalAction(
-        //         action: () => OnReadyCommand.Execute(this),
-        //         () => OnReadyCommand is not null,
-        //         () => new[] {Stacks, Lanes}.All(value => value > 0)
-        //     ){ MillisecondsTimeout = 100 }.Invoke();
-
         WeakReferenceMessenger.Default.Send(new InitializingMessage(this));
 
         new ConditionalAction(
@@ -74,7 +54,6 @@ public partial class GameField : ContentView
                 {
                     WeakReferenceMessenger.Default.Send(new InitializedMessage(this));
                 },
-                //() => OnReadyCommand is not null,
                 () => new[] {Stacks, Lanes}.All(value => value > 0)
             ){ MillisecondsTimeout = 100 }.Invoke();
 

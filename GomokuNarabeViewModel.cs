@@ -1,10 +1,9 @@
-﻿using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using MauiGomokuNarabeGame.Messages;
 using MauiGomokuNarabeGame.Models;
-using MauiGomokuNarabeGame.Views;
+using System.Collections.ObjectModel;
 
 namespace MauiGomokuNarabeGame;
 
@@ -96,18 +95,6 @@ public partial class GomokuNarabeViewModel : ObservableObject
         PoolAreaWidth = (pageSize.Width - FieldWidth) / 2;
 
         CoinSize = FieldHeight/stacks;
-    }
-
-    [RelayCommand]
-    void OnFieldReady()
-    {
-        StrongReferenceMessenger.Default.Send(new ClearFieldMessage("clear"));
-    }
-
-    [RelayCommand]
-    void OnCoinPoolReady(Coin coin)
-    {
-        StrongReferenceMessenger.Default.Send(new FillPoolMessage("fill"){ PooledCoin = coin });
     }
 
     [RelayCommand]

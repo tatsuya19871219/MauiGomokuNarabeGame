@@ -78,8 +78,7 @@
             </Grid.GestureRecognizers>
 
             <views:GameField Lanes="{StaticResource FieldLanes}" Stacks="{StaticResource FieldStacks}"
-                             CoinSize="{Binding CoinSize}"/>
-            <!--OnReadyCommand="{Binding FieldReadyCommand}"/>-->
+                             CoinSize="{Binding CoinSize}"/>            
          
             <Image Source="frame.png"/>                
                   
@@ -92,7 +91,6 @@
                             PoolCapacity="{StaticResource CoinPoolCapacity}" 
                             CoinSize="{Binding CoinSize}"
                             PooledCoin="{x:Static model:Coin.RedCoin}"/>
-            <!--OnReadyCommand="{Binding CoinPoolReadyCommand}"/>-->
         </Grid>
 
         <Grid x:Name="StockAreaYellow"
@@ -102,7 +100,6 @@
                             PoolCapacity="{StaticResource CoinPoolCapacity}" 
                             CoinSize="{Binding CoinSize}"
                             PooledCoin="{x:Static model:Coin.YellowCoin}"/>
-            <!--OnReadyCommand="{Binding CoinPoolReadyCommand}"/>-->
         </Grid>
 
         <Grid.Triggers>

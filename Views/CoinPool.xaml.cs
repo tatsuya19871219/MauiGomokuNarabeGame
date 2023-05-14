@@ -2,8 +2,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using MauiGomokuNarabeGame.Helpers;
 using MauiGomokuNarabeGame.Messages;
 using MauiGomokuNarabeGame.Models;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
 
 namespace MauiGomokuNarabeGame.Views;
 
@@ -47,13 +45,6 @@ public partial class CoinPool : ContentView
 		set => SetValue(PooledCoinProperty, value);
 	}
 
-	// public static readonly BindableProperty OnReadyCommandProperty =
-	// 	BindableProperty.Create(nameof(OnReadyCommand), typeof(ICommand), typeof(CoinPool));
-	// public ICommand OnReadyCommand
-	// {
-	// 	get => (ICommand)GetValue(OnReadyCommandProperty);
-	// 	set => SetValue(OnReadyCommandProperty, value);
-	// }
     #endregion
 
     Stack<Image> _coinImages = new();
@@ -62,13 +53,6 @@ public partial class CoinPool : ContentView
 	{
 		InitializeComponent();
 
-		// new ConditionalAction(
-		// 		action: () => OnReadyCommand.Execute(PooledCoin),
-		// 		() => OnReadyCommand is not null,
-		// 		() => PooledCoin is not Coin.NullCoin,
-		// 		() => PoolCapacity > 0
-		// 	).Invoke();
-
 		WeakReferenceMessenger.Default.Send(new InitializingMessage(this));
 
 		new ConditionalAction(
@@ -76,7 +60,6 @@ public partial class CoinPool : ContentView
 				{
 					WeakReferenceMessenger.Default.Send(new InitializedMessage(this));
 				},
-				//() => OnReadyCommand is not null,
 				() => PooledCoin is not Coin.NullCoin,
 				() => PoolCapacity > 0
 			).Invoke();
