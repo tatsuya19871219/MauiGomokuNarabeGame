@@ -64,25 +64,49 @@ control ViewModel
 
 
 group Initialize
-ViewModel -> CoinPool : FillPool (Message)
+note over ViewModel : InputEnabled = false
+Activate CoinPool
+Activate GameField
+CoinPool -> ViewModel : Initializing (Message)
+GameField -> ViewModel : Initializing (Message)
+CoinPool -> CoinPool : FillPool
+CoinPool --> ViewModel : Initialized (Message)
+Deactivate CoinPool
+GameField --> ViewModel : Initialized (Message)
+Deactivate GameField
+note over ViewModel : InputEnabled = true
 end
 
 group Coin insertion
 LaneSelector -> ViewModel : SummonCoin (ICommand)
+note over ViewModel : InputEnabled = false
 ViewModel -> CoinPool : PopCoin Request (Message)
-CoinPool -> ViewModel : Coin (Image)
-ViewModel -> GameField : InsertCoin (Message)
+Activate CoinPool
+CoinPool --> ViewModel : Coin (Image)
+Deactivate CoinPool
+ViewModel -> GameField : InsertCoin Request (Message)
+Activate GameField
+GameField --> ViewModel
+Deactivate GameField
 opt Lane stack is full
 ViewModel -> LaneSelector : DisableLane (Message)
 end
+note over ViewModel : InputEnabled = true
 end
 
 group Game reset
 GameField -> ViewModel : ResetGame (ICommand)
-'ViewModel -> Model : Reset (Method)
-ViewModel -> GameField : ClearField (Message)
-'ViewModel -> GameField : Reset (Message)
-'ViewModel -> CoinPool : Reset (Message)
+note over ViewModel : InputEnabled = false
+ViewModel -> GameField : ClearField Request (Message)
+Activate GameField
+ViewModel --> ViewModel : Delay
+ViewModel -> CoinPool : FillPool Request (Message)
+Activate CoinPool
+GameField --> ViewModel
+Deactivate GameField
+CoinPool --> ViewModel
+Deactivate CoinPool
+note over ViewModel : InputEnabled = true
 end
 
 @enduml
