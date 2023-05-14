@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using MauiGomokuNarabeGame.Messages;
 using MauiGomokuNarabeGame.Models;
+using MauiGomokuNarabeGame.Views;
 
 namespace MauiGomokuNarabeGame;
 
@@ -27,9 +28,31 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
     GomokuNarabe _gomokuNarabe;
 
+    Dictionary<object, bool> _isInitialized = new();
+
     public GomokuNarabeViewModel()
     {
         InputEnabled = false;
+
+        WeakReferenceMessenger.Default.Register<InitializingMessage>(this, (r, m) =>
+        {
+            object key = m.Value;
+
+            if (_isInitialized.ContainsKey(key)) throw new Exception("Given key is already set.");
+
+            _isInitialized[key] = false;
+        });
+
+        WeakReferenceMessenger.Default.Register<InitializedMessage>(this, (r, m) =>
+        {
+            object key = m.Value;
+
+            if (!_isInitialized.ContainsKey(key)) throw new IndexOutOfRangeException(nameof(_isInitialized));
+
+            _isInitialized[key] = true;
+
+            if (_isInitialized.Values.All(x=>x)) InputEnabled = true;
+        });
     }
 
     public GomokuNarabeViewModel SetFieldSize(int fieldLanes, int fieldStacks)
@@ -78,13 +101,13 @@ public partial class GomokuNarabeViewModel : ObservableObject
     [RelayCommand]
     void OnFieldReady()
     {
-
+        StrongReferenceMessenger.Default.Send(new ClearFieldMessage("clear"));
     }
 
     [RelayCommand]
     void OnCoinPoolReady(Coin coin)
     {
-        
+        StrongReferenceMessenger.Default.Send(new FillPoolMessage("fill"){ PooledCoin = coin });
     }
 
     [RelayCommand]
@@ -110,7 +133,8 @@ public partial class GomokuNarabeViewModel : ObservableObject
     {
         _gomokuNarabe.Reset();
         StrongReferenceMessenger.Default.Send(new ClearFieldMessage("reset"));
-        StrongReferenceMessenger.Default.Send(new FillPoolMessage("fill"));
+        StrongReferenceMessenger.Default.Send(new FillPoolMessage("fill"){ PooledCoin = Coin.RedCoin });
+        StrongReferenceMessenger.Default.Send(new FillPoolMessage("fill"){ PooledCoin = Coin.YellowCoin });
     }
 
 }

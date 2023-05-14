@@ -9,11 +9,9 @@ namespace MauiGomokuNarabeGame.Views;
 
 public partial class CoinPool : ContentView
 {
-    #region Bindable properties
+    #region Properties
     public static readonly BindableProperty CoinImageFilenameProperty
 		= BindableProperty.Create(nameof(CoinImageFilename), typeof(string), typeof(CoinPool));
-	// public static readonly BindableProperty PoolCapacityProperty
-	// 	= BindableProperty.Create(nameof(PoolCapacity), typeof(int), typeof(CoinPool));
 	public static readonly BindableProperty CoinSizeProperty
 		= BindableProperty.Create(nameof(CoinSize), typeof(double), typeof(CoinPool));
 	public static readonly BindableProperty PooledCoinProperty
@@ -25,11 +23,6 @@ public partial class CoinPool : ContentView
 		set => SetValue(CoinImageFilenameProperty, value);
 	}
 
-	// public int PoolCapacity
-	// {
-	// 	get => (int)GetValue(PoolCapacityProperty);
-	// 	set => SetValue(PoolCapacityProperty, value);
-	// }
 	readonly int _poolCapacity;
 
 	required public int PoolCapacity 
@@ -39,8 +32,6 @@ public partial class CoinPool : ContentView
 		{
 			_poolCapacity = value;
 			FillPool();
-
-			//ExecuteOnReadyCommandAsync();
 		}
 	}
 
@@ -56,13 +47,13 @@ public partial class CoinPool : ContentView
 		set => SetValue(PooledCoinProperty, value);
 	}
 
-	public static readonly BindableProperty OnReadyCommandProperty =
-		BindableProperty.Create(nameof(OnReadyCommand), typeof(ICommand), typeof(CoinPool));
-	public ICommand OnReadyCommand
-	{
-		get => (ICommand)GetValue(OnReadyCommandProperty);
-		set => SetValue(OnReadyCommandProperty, value);
-	}
+	// public static readonly BindableProperty OnReadyCommandProperty =
+	// 	BindableProperty.Create(nameof(OnReadyCommand), typeof(ICommand), typeof(CoinPool));
+	// public ICommand OnReadyCommand
+	// {
+	// 	get => (ICommand)GetValue(OnReadyCommandProperty);
+	// 	set => SetValue(OnReadyCommandProperty, value);
+	// }
     #endregion
 
     Stack<Image> _coinImages = new();
@@ -71,9 +62,21 @@ public partial class CoinPool : ContentView
 	{
 		InitializeComponent();
 
+		// new ConditionalAction(
+		// 		action: () => OnReadyCommand.Execute(PooledCoin),
+		// 		() => OnReadyCommand is not null,
+		// 		() => PooledCoin is not Coin.NullCoin,
+		// 		() => PoolCapacity > 0
+		// 	).Invoke();
+
+		WeakReferenceMessenger.Default.Send(new InitializingMessage(this));
+
 		new ConditionalAction(
-				action: () => OnReadyCommand.Execute(PooledCoin),
-				() => OnReadyCommand is not null,
+				action: () => 
+				{
+					WeakReferenceMessenger.Default.Send(new InitializedMessage(this));
+				},
+				//() => OnReadyCommand is not null,
 				() => PooledCoin is not Coin.NullCoin,
 				() => PoolCapacity > 0
 			).Invoke();
@@ -91,6 +94,8 @@ public partial class CoinPool : ContentView
 
 		StrongReferenceMessenger.Default.Register<FillPoolMessage>(this, (r, m) =>
 		{
+			if (!m.PooledCoin.Equals(PooledCoin)) return;
+
 			FillPoolAsync();			
 		});
 	}
@@ -196,16 +201,5 @@ public partial class CoinPool : ContentView
 			yield return new(x, y);
 		}
 	}
-
-	// async void ExecuteOnReadyCommandAsync()
-    // {
-    //     while (true)
-    //     {
-    //         if (OnReadyCommand is not null) break;
-    //         await Task.Delay(100);
-    //     }
-
-    //     OnReadyCommand.Execute(this);
-    // }
 
 }
