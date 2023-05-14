@@ -90,6 +90,28 @@ end
 @startuml AppState
 
 hide empty description
+
+state Initial {
+    state "InputDisabled" as Initial.InputDisabled
+    state "InputEnabled" as Initial.InputEnabled
+    [*] -> Initial.InputDisabled
+    Initial.InputDisabled --> Initial.InputEnabled : Recieved initialized messages 
+    Initial.InputEnabled -> [*]
+}
+
+state OnGame {
+    state "InputDisabled" as OnGame.InputDisabled
+    state "InputEnabled" as OnGame.InputEnabled
+    [*] -> OnGame.InputEnabled
+    OnGame.InputEnabled --> OnGame.InputDisabled : SummonCoin begin
+    OnGame.InputDisabled --> OnGame.InputEnabled : SummonCoin end
+}
+
+' state Final {
+'     state "InputDisabled" as Final.InputDisabled
+'     state "InputEnabled" as Final.InputEnabled
+' }
+
 [*] -> Initial : On entry initialization
 Initial -> OnGame : Enable gesture recognizer
 OnGame --> Final : Disable gesture recognizer
