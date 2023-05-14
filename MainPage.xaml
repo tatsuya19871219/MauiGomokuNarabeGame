@@ -36,14 +36,14 @@
     <Grid x:Name="GameScreen">
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="{Binding TouchAreaHeight}"/>
+            <RowDefinition/>
             <RowDefinition Height="{Binding FieldHeight}"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="{Binding PoolAreaWidth}"/>
+            <ColumnDefinition/>
             <ColumnDefinition Width="{Binding FieldWidth}"/>
-            <ColumnDefinition Width="{Binding PoolAreaWidth}"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
         <Grid x:Name="TouchArea"

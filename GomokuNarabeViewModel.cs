@@ -13,8 +13,6 @@ public partial class GomokuNarabeViewModel : ObservableObject
     [ObservableProperty] double _coinSize;
     [ObservableProperty] double _fieldWidth;
     [ObservableProperty] double _fieldHeight;
-    [ObservableProperty] double _touchAreaHeight;
-    [ObservableProperty] double _poolAreaWidth;
 
     [ObservableProperty] ColumnDefinitionCollection _fieldColumns;
 
@@ -90,9 +88,6 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
         FieldHeight  = s_fieldHeightOccupancy * pageSize.Height;
         FieldWidth = ratio * FieldHeight;
-
-        TouchAreaHeight = pageSize.Height - FieldHeight;
-        PoolAreaWidth = (pageSize.Width - FieldWidth) / 2;
 
         CoinSize = FieldHeight/stacks;
     }

@@ -144,6 +144,8 @@ public partial class CoinPool : ContentView
 
 	void UpdateCoinTranslation()
 	{
+		if (CoinSize <= 0) return;
+
 		var coinPositionEnumerator = CoinPositionGenerator().GetEnumerator();
 
         foreach (var coinImage in _coinImages.Reverse())
