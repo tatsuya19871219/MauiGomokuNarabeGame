@@ -64,26 +64,48 @@ public partial class CoinPool : ContentView
 				() => PoolCapacity > 0
 			).Invoke();
 
-		StrongReferenceMessenger.Default.Register<PopCoinMessage>(this, (r, m) =>
+		WeakReferenceMessenger.Default.Register<PopCoinMessage>(this, (r, m) =>
 		{
 			if (!m.RequestCoin.Equals(PooledCoin)) return;
 
-			var coinImage = _coinImages.Pop();
+			//var coinImage = _coinImages.Pop();
 
-			Pool.Remove(coinImage);
-
-			m.Reply(coinImage);
+			m.Reply( PopCoinAsync() );
 		});
 
 		StrongReferenceMessenger.Default.Register<FillPoolMessage>(this, (r, m) =>
 		{
-			if (!m.PooledCoin.Equals(PooledCoin)) return;
+			//if (!m.PooledCoin.Equals(PooledCoin)) return;
 
 			FillPoolAsync();			
 		});
 	}
 
-	void FillPool()
+	async Task<Image> PopCoinAsync()
+	{
+		var coinImage = _coinImages.Pop();
+
+		var x = coinImage.TranslationX;
+		var y = coinImage.TranslationY;
+
+		coinImage.TranslateTo(x, y-50);
+		await coinImage.FadeTo(0);
+			
+		Pool.Remove(coinImage);
+
+		coinImage.Opacity = 1;
+
+		//await Task.Delay(100);
+
+		return coinImage;
+	}
+
+    private void TranslateTo(double x, double v)
+    {
+        throw new NotImplementedException();
+    }
+
+    void FillPool()
 	{
 		for (int i = _coinImages.Count; i < PoolCapacity; i++)
 		{

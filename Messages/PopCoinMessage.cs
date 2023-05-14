@@ -3,7 +3,7 @@ using MauiGomokuNarabeGame.Models;
 
 namespace MauiGomokuNarabeGame.Messages;
 
-public class PopCoinMessage : RequestMessage<Image>
+public class PopCoinMessage : AsyncRequestMessage<Image>
 {
     required public Coin RequestCoin { get; init; }
 }

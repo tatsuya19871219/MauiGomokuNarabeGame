@@ -93,8 +93,10 @@ public partial class GomokuNarabeViewModel : ObservableObject
     }
 
     [RelayCommand]
-    void SummonCoin(int laneIndex)
+    async void SummonCoin(int laneIndex)
     {
+        InputEnabled = false;
+
         Coin coin = _gomokuNarabe.NextCoin;
 
         var success = _gomokuNarabe.TryPushAt(laneIndex);
@@ -102,21 +104,30 @@ public partial class GomokuNarabeViewModel : ObservableObject
         if (!success) return;
 
         // Send message to animate coin Image
-        Image coinImage = StrongReferenceMessenger.Default.Send(new PopCoinMessage() { RequestCoin = coin });
+        Image coinImage = await WeakReferenceMessenger.Default.Send(new PopCoinMessage() { RequestCoin = coin });
 
+        // TODO: awaitable
         StrongReferenceMessenger.Default.Send(new InsertCoinMessage(coinImage) { TargetLane = laneIndex });
 
         // Update next coin
         NextCoin = _gomokuNarabe.NextCoin;
+
+        InputEnabled = true;
     }
 
     [RelayCommand]
     void ResetGame()
     {
+        InputEnabled = false;
+
         _gomokuNarabe.Reset();
+
+        // Async messages for await
         StrongReferenceMessenger.Default.Send(new ClearFieldMessage("reset"));
-        StrongReferenceMessenger.Default.Send(new FillPoolMessage("fill"){ PooledCoin = Coin.RedCoin });
-        StrongReferenceMessenger.Default.Send(new FillPoolMessage("fill"){ PooledCoin = Coin.YellowCoin });
+        // StrongReferenceMessenger.Default.Send(new FillPoolMessage("fill"){ PooledCoin = Coin.RedCoin });
+        // StrongReferenceMessenger.Default.Send(new FillPoolMessage("fill"){ PooledCoin = Coin.YellowCoin });
+
+        InputEnabled = true;
     }
 
 }
