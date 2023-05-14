@@ -76,6 +76,18 @@ public partial class GomokuNarabeViewModel : ObservableObject
     }
 
     [RelayCommand]
+    void OnFieldReady()
+    {
+
+    }
+
+    [RelayCommand]
+    void OnCoinPoolReady(Coin coin)
+    {
+        
+    }
+
+    [RelayCommand]
     void SummonCoin(int laneIndex)
     {
         Coin coin = _gomokuNarabe.NextCoin;

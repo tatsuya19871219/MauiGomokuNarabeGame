@@ -2,6 +2,7 @@
 
 public enum Coin
 {
+    NullCoin,
     RedCoin,
     YellowCoin
 }

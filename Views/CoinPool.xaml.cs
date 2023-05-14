@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.Messaging;
+using MauiGomokuNarabeGame.Helpers;
 using MauiGomokuNarabeGame.Messages;
 using MauiGomokuNarabeGame.Models;
 using System.Runtime.CompilerServices;
@@ -38,6 +39,8 @@ public partial class CoinPool : ContentView
 		{
 			_poolCapacity = value;
 			FillPool();
+
+			//ExecuteOnReadyCommandAsync();
 		}
 	}
 
@@ -67,6 +70,13 @@ public partial class CoinPool : ContentView
 	public CoinPool()
 	{
 		InitializeComponent();
+
+		new ConditionalAction(
+				action: () => OnReadyCommand.Execute(PooledCoin),
+				() => OnReadyCommand is not null,
+				() => PooledCoin is not Coin.NullCoin,
+				() => PoolCapacity > 0
+			).Invoke();
 
 		StrongReferenceMessenger.Default.Register<PopCoinMessage>(this, (r, m) =>
 		{
@@ -186,4 +196,16 @@ public partial class CoinPool : ContentView
 			yield return new(x, y);
 		}
 	}
+
+	// async void ExecuteOnReadyCommandAsync()
+    // {
+    //     while (true)
+    //     {
+    //         if (OnReadyCommand is not null) break;
+    //         await Task.Delay(100);
+    //     }
+
+    //     OnReadyCommand.Execute(this);
+    // }
+
 }

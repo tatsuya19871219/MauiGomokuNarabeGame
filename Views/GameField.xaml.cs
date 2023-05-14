@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.Messaging;
+using MauiGomokuNarabeGame.Helpers;
 using MauiGomokuNarabeGame.Messages;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
@@ -8,23 +10,26 @@ namespace MauiGomokuNarabeGame.Views;
 public partial class GameField : ContentView
 {
     #region Bindable Properties
-    public static readonly BindableProperty LanesProperty
-        = BindableProperty.Create(nameof(Lanes), typeof(int), typeof(GameField));
+    // public static readonly BindableProperty LanesProperty
+    //     = BindableProperty.Create(nameof(Lanes), typeof(int), typeof(GameField));
     public static readonly BindableProperty StacksProperty
         = BindableProperty.Create(nameof(Stacks), typeof(int), typeof(GameField));
     public static readonly BindableProperty CoinSizeProperty
         = BindableProperty.Create(nameof(CoinSize), typeof(double), typeof(CoinPool));
 
-    public int Lanes
-    {
-        get => (int)GetValue(LanesProperty);
-        set => SetValue(LanesProperty, value);
-    }
+    // public int Lanes
+    // {
+    //     get => (int)GetValue(LanesProperty);
+    //     set => SetValue(LanesProperty, value);
+    // }
 
     public int Stacks
     {
         get => (int)GetValue(StacksProperty);
-        set => SetValue(StacksProperty, value);
+        set
+        {
+            SetValue(StacksProperty, value);
+        }
     }
 
     public double CoinSize
@@ -37,19 +42,41 @@ public partial class GameField : ContentView
 	public ICommand OnReadyCommand
 	{
 		get => (ICommand)GetValue(OnReadyCommandProperty);
-		set => SetValue(OnReadyCommandProperty, value);
+		set
+        {
+            SetValue(OnReadyCommandProperty, value);
+            Debug.WriteLine("On ready command is set"); // does not hit
+        }
 	}
+
+    readonly int _lanes;
+    required public int Lanes
+    {
+        get => _lanes;
+        init
+        {
+            _lanes = value;
+            //_coinQueues.Clear();
+            for (int i = 0; i < _lanes; i++) _coinQueues.Add(new());
+
+            //ExecuteOnReadyCommandAsync();
+        }
+    }
+
     #endregion
 
+    //ConditionalAction _onInit;
     List<Queue<Image>> _coinQueues = new();
-    //List<int> _stackPosition = new();
 
     public GameField()
 	{
 		InitializeComponent();
 
-        //FieldGrid.HorizontalOptions = LayoutOptions.Start;
-        //FieldGrid.VerticalOptions = LayoutOptions.Start;
+        new ConditionalAction(
+                action: () => OnReadyCommand.Execute(this),
+                () => OnReadyCommand is not null,
+                () => new[] {Stacks, Lanes}.All(value => value > 0)
+            ){ MillisecondsTimeout = 100 }.Invoke();
 
         StrongReferenceMessenger.Default.Register<InsertCoinMessage>(this, (r, m) =>
         {
@@ -95,21 +122,33 @@ public partial class GameField : ContentView
         FieldGrid.Remove(image);
     }
 
-    protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
-    {
-        switch (propertyName)
-        {
-            case nameof(Lanes):
-                
-                _coinQueues.Clear();
-                for (int i = 0; i < Lanes; i++) _coinQueues.Add(new());
-                                                
-                break;
+    // async void ExecuteOnReadyCommandAsync()
+    // {
+    //     while (true)
+    //     {
+    //         if (OnReadyCommand is not null) break;
+    //         await Task.Delay(100);
+    //     }
 
-            default:
-                base.OnPropertyChanged(propertyName);
-                break;
-        }
+    //     OnReadyCommand.Execute(this);
+    // }
+
+
+    // protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    // {
+    //     switch (propertyName)
+    //     {
+    //         case nameof(Lanes):
+                
+    //             _coinQueues.Clear();
+    //             for (int i = 0; i < Lanes; i++) _coinQueues.Add(new());
+                                                
+    //             break;
+
+    //         default:
+    //             base.OnPropertyChanged(propertyName);
+    //             break;
+    //     }
         
-    }
+    // }
 }
