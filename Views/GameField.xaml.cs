@@ -116,14 +116,18 @@ public partial class GameField : ContentView
 
     async Task<bool> RemoveCoinsAsync(Queue<Image> queue)
     {
+        var tasks = new List<Task>();
+
         while (queue.Count > 0)
         {
             var image = queue.Dequeue();
             
-            await DropCoin(image);
+            tasks.Add( DropCoin(image) );
             
             await Task.Delay(100);
         }
+
+        await Task.WhenAll(tasks);
 
         return queue.Count == 0;
     }

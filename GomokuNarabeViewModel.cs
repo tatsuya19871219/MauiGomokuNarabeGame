@@ -34,6 +34,8 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
         WeakReferenceMessenger.Default.Register<InitializingMessage>(this, (r, m) =>
         {
+            InputEnabled = false;
+
             object key = m.Value;
 
             if (_isInitialized.ContainsKey(key)) throw new Exception("Given key is already set.");
@@ -49,7 +51,11 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
             _isInitialized[key] = true;
 
-            if (_isInitialized.Values.All(x=>x)) InputEnabled = true;
+            if (_isInitialized.Values.All(x=>x))
+            {
+                InputEnabled = true;
+                _isInitialized.Clear();
+            }
         });
     }
 
@@ -108,6 +114,9 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
         var result = await StrongReferenceMessenger.Default.Send(new InsertCoinRequestMessage() { CoinImage = coinImage, TargetLane = laneIndex });
 
+        if (_gomokuNarabe.Lanes[laneIndex].CurrentPosition == _fieldStacks)
+            StrongReferenceMessenger.Default.Send(new DisableLaneMessage("disable"){ TargetLane = laneIndex });
+
         // Update next coin
         NextCoin = _gomokuNarabe.NextCoin;
 
@@ -117,7 +126,10 @@ public partial class GomokuNarabeViewModel : ObservableObject
     [RelayCommand]
     async void ResetGame()
     {
+        //var b = MainThread.IsMainThread;
+
         InputEnabled = false;
+        //WeakReferenceMessenger.Default.Send(new InitializingMessage(this));
 
         _gomokuNarabe.Reset();
 
@@ -129,6 +141,7 @@ public partial class GomokuNarabeViewModel : ObservableObject
         await t;
 
         InputEnabled = true;
+        //WeakReferenceMessenger.Default.Send(new InitializedMessage(this));
     }
 
 }

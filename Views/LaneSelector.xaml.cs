@@ -1,5 +1,7 @@
 //using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using MauiGomokuNarabeGame.Messages;
 
 namespace MauiGomokuNarabeGame.Views;
 
@@ -39,6 +41,18 @@ public partial class LaneSelector : ContentView
         //SelectorDisabled = true;
 
         VisualStateManager.GoToState(this, "Enable");
+
+        StrongReferenceMessenger.Default.Register<DisableLaneMessage>(this, (r, m) =>
+        {
+            if (m.TargetLane != LaneIndex) return;
+
+            VisualStateManager.GoToState(this, "Disable");
+        });
+
+        StrongReferenceMessenger.Default.Register<ClearFieldRequestMessage>(this, (r, m) =>
+        {
+            VisualStateManager.GoToState(this, "Enable");
+        });
 	}
 
 
