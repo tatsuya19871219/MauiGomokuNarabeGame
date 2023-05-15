@@ -27,22 +27,41 @@ public partial class LaneSelector : ContentView
 	{
 		InitializeComponent();
 
-        VisualStateManager.GoToState(this, "Enable");
+        VisualStateManager.GoToState(LaneSelectorGrid, "Enable");
 
-        WeakReferenceMessenger.Default.Register<LaneSelectorStateMessage>(this, (r, m) =>
+        // WeakReferenceMessenger.Default.Register<LaneSelectorStateMessage>(this, (r, m) =>
+        // {
+        //     if (m.Value != LaneIndex) return;
+
+        //     var state = m.MessageType switch 
+        //     {
+        //         LaneSelectorStateMessage.Types.Show => "Show",
+        //         LaneSelectorStateMessage.Types.Enable => "Enable",
+        //         LaneSelectorStateMessage.Types.Disable => "Disable",
+        //         LaneSelectorStateMessage.Types.Hide => "Hide",
+        //         _ => throw new Exception("Unsupported message")
+        //     };
+
+        //     VisualStateManager.GoToState(this, state);
+        // });
+
+        WeakReferenceMessenger.Default.Register<LaneSelectorEnableMessage>(this, (r, m) =>
         {
-            if (m.Value != LaneIndex) return;
+            if (m.TargetLane is int targetLane && targetLane != LaneIndex) return;
 
-            var state = m.MessageType switch 
-            {
-                LaneSelectorStateMessage.Types.Show => "Show",
-                LaneSelectorStateMessage.Types.Enable => "Enable",
-                LaneSelectorStateMessage.Types.Disable => "Disable",
-                LaneSelectorStateMessage.Types.Hide => "Hide",
-                _ => throw new Exception("Unsupported message")
-            };
+            var enable = m.Value;
 
-            VisualStateManager.GoToState(this, state);
+            VisualStateManager.GoToState(LaneSelectorGrid, enable ? "Enable" : "Disable");
+            //VisualStateManager.GoToState(LaneSelectorGrid, "Disable");
+        });
+
+        WeakReferenceMessenger.Default.Register<LaneSelectorVisibleMessage>(this, (r, m) =>
+        {
+            if (m.TargetLane is int targetLane && targetLane != LaneIndex) return;
+
+            var visible = m.Value;
+
+            VisualStateManager.GoToState(this, visible ? "Show" : "Hide");
         });
 
 	}

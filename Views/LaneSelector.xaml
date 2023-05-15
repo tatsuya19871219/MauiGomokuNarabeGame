@@ -18,19 +18,21 @@
             <VisualState x:Name="Show">
                 <VisualState.Setters>
                     <Setter TargetName="this" Property="IsVisible" Value="True"/>
-                    <Setter TargetName="SelectorArrow" Property="IsVisible" Value="True"/>
+                    <!-- <Setter TargetName="SelectorArrow" Property="IsVisible" Value="True"/> -->
                 </VisualState.Setters>
             </VisualState>
-            <VisualState x:Name="Enable">
+            <!-- <VisualState x:Name="Enable">
                 <VisualState.Setters>
                     <Setter TargetName="SelectorArrow" Property="IsVisible" Value="True"/>
+                    <Setter TargetName="DisabledMark" Property="IsVisible" Value="False"/>
                 </VisualState.Setters>
             </VisualState>
             <VisualState x:Name="Disable">
                 <VisualState.Setters>
+                    <Setter TargetName="SelectorArrow" Property="IsVisible" Value="False"/>
                     <Setter TargetName="DisabledMark" Property="IsVisible" Value="True"/>
                 </VisualState.Setters>
-            </VisualState>
+            </VisualState> -->
             <VisualState x:Name="Hide">
                 <VisualState.Setters>
                     <Setter TargetName="this" Property="IsVisible" Value="False"/>
@@ -47,9 +49,26 @@
             <TapGestureRecognizer x:Name="MyGesture" Tapped="TapGestureRecognizer_Tapped"/>
         </Grid.GestureRecognizers>
 
-        <Image x:Name="SelectorArrow" Source="selector_arrow.png" IsVisible="False"/>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Enable">
+                    <VisualState.Setters>
+                        <Setter TargetName="SelectorArrow" Property="IsVisible" Value="True"/>
+                        <Setter TargetName="DisabledMark" Property="IsVisible" Value="False"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Disable">
+                    <VisualState.Setters>
+                        <Setter TargetName="SelectorArrow" Property="IsVisible" Value="False"/>
+                        <Setter TargetName="DisabledMark" Property="IsVisible" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
 
-        <Image x:Name="DisabledMark" Source="selector_disabled.png" IsVisible="False"/>
+        <Image x:Name="SelectorArrow" Source="selector_arrow.png"/>
+
+        <Image x:Name="DisabledMark" Source="selector_disabled.png"/>
 
         <!-- <Label Text="{Binding LaneIndex}" FontSize="24"/> -->
 

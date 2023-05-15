@@ -14,7 +14,7 @@ internal class LaneSelectorStateMessage : ValueChangedMessage<int>
     
     required internal Types MessageType { get; init; }
 
-    public LaneSelectorStateMessage(int targetLane) : base(targetLane)
+    internal LaneSelectorStateMessage(int targetLane) : base(targetLane)
     {
     }
     

@@ -19,7 +19,7 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
     public ObservableCollection<Lane> Lanes { get; set; } = new();
     [ObservableProperty] Coin _nextCoin;
-    [ObservableProperty] bool _inputEnabled;
+    //roperty] bool _inputEnabled;
 
     int? _fieldLanes;
     int? _fieldStacks;
@@ -30,11 +30,11 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
     public GomokuNarabeViewModel()
     {
-        InputEnabled = false;
+        //InputEnabled = false;
 
         WeakReferenceMessenger.Default.Register<InitializingMessage>(this, (r, m) =>
         {
-            InputEnabled = false;
+            //InputEnabled = false;
 
             object key = m.Value;
 
@@ -53,7 +53,7 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
             if (_isInitialized.Values.All(x=>x))
             {
-                InputEnabled = true;
+                //InputEnabled = true;
                 _isInitialized.Clear();
             }
         });
@@ -108,30 +108,34 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
         if (!success) return;
         
-        InputEnabled = false;
+        //InputEnabled = false;
+        WeakReferenceMessenger.Default.Send(new LaneSelectorVisibleMessage(false));
 
         Image coinImage = await WeakReferenceMessenger.Default.Send(new PopCoinRequestMessage() { RequestCoin = coin });
 
         var result = await StrongReferenceMessenger.Default.Send(new InsertCoinRequestMessage() { CoinImage = coinImage, TargetLane = laneIndex });
 
         if (_gomokuNarabe.Lanes[laneIndex].CurrentPosition == _fieldStacks)
-            StrongReferenceMessenger.Default.Send(new LaneSelectorStateMessage(laneIndex){ MessageType = LaneSelectorStateMessage.Types.Disable });
+            //StrongReferenceMessenger.Default.Send(new LaneSelectorStateMessage(laneIndex){ MessageType = LaneSelectorStateMessage.Types.Disable });
+            WeakReferenceMessenger.Default.Send(new LaneSelectorEnableMessage(false) { TargetLane = laneIndex });
 
         // Update next coin
         NextCoin = _gomokuNarabe.NextCoin;
 
-        InputEnabled = true;
+        //InputEnabled = true;
+        WeakReferenceMessenger.Default.Send(new LaneSelectorVisibleMessage(true));
     }
 
     [RelayCommand]
     async void ResetGame()
-    {
-        foreach (var lane in _gomokuNarabe.Lanes)
-        {
-            WeakReferenceMessenger.Default.Send(
-                new LaneSelectorStateMessage(lane.LaneIndex){ MessageType = LaneSelectorStateMessage.Types.Hide }
-            );
-        }        
+{
+        // foreach (var lane in _gomokuNarabe.Lanes)
+        // {
+        //     WeakReferenceMessenger.Default.Send(
+        //         new LaneSelectorStateMessage(lane.LaneIndex){ MessageType = LaneSelectorStateMessage.Types.Hide }
+        //     );
+        // }
+        WeakReferenceMessenger.Default.Send(new LaneSelectorVisibleMessage(false));        
 
         _gomokuNarabe.Reset();
 
@@ -147,13 +151,14 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
         await Task.Delay(500);
 
-        foreach(var lane in _gomokuNarabe.Lanes)
-        {
-            WeakReferenceMessenger.Default.Send(
-                new LaneSelectorStateMessage(lane.LaneIndex){ MessageType = LaneSelectorStateMessage.Types.Show }
-            );
-        }
-
+        // foreach(var lane in _gomokuNarabe.Lanes)
+        // {
+        //     WeakReferenceMessenger.Default.Send(
+        //         new LaneSelectorStateMessage(lane.LaneIndex){ MessageType = LaneSelectorStateMessage.Types.Show }
+        //     );
+        // }
+        WeakReferenceMessenger.Default.Send(new LaneSelectorEnableMessage(true));
+        WeakReferenceMessenger.Default.Send(new LaneSelectorVisibleMessage(true));
     }
 
 }
