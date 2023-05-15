@@ -58,11 +58,12 @@ public partial class GameField : ContentView
             ){ MillisecondsTimeout = 100 }.Invoke();
 
 
-        StrongReferenceMessenger.Default.Register<InsertCoinMessage>(this, (r, m) =>
+        StrongReferenceMessenger.Default.Register<InsertCoinRequestMessage>(this, (r, m) =>
         {
             var targetLane = m.TargetLane;
 
-            Image coinImage = m.Value;
+            //Image coinImage = m.Value;
+            Image coinImage = m.CoinImage;
 
             coinImage.TranslationX = targetLane * CoinSize;
             coinImage.TranslationY = Height - CoinSize*(_coinQueues[targetLane].Count + 1);
@@ -71,9 +72,11 @@ public partial class GameField : ContentView
 
             _coinQueues[targetLane].Enqueue(coinImage);
 
+            m.Reply(true);
+
         });
 
-        StrongReferenceMessenger.Default.Register<ClearFieldMessage>(this, async (r, m) =>
+        StrongReferenceMessenger.Default.Register<ClearFieldRequestMessage>(this, async (r, m) =>
         {
             foreach (var queue in _coinQueues)
             {
@@ -81,6 +84,8 @@ public partial class GameField : ContentView
             }
 
             await Task.Delay(0);
+
+            m.Reply(true);
         });
 	}
 

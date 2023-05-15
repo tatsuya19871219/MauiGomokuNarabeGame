@@ -86,7 +86,7 @@ CoinPool --> ViewModel : Coin (Image)
 Deactivate CoinPool
 ViewModel -> GameField : InsertCoin Request (Message)
 Activate GameField
-GameField --> ViewModel
+GameField --> ViewModel : success (bool)
 Deactivate GameField
 opt Lane stack is full
 ViewModel -> LaneSelector : DisableLane (Message)
@@ -102,9 +102,9 @@ Activate GameField
 ViewModel --> ViewModel : Delay
 ViewModel -> CoinPool : FillPool Request (Message)
 Activate CoinPool
-GameField --> ViewModel
+GameField --> ViewModel : success (bool)
 Deactivate GameField
-CoinPool --> ViewModel
+CoinPool --> ViewModel : success (bool)
 Deactivate CoinPool
 note over ViewModel : InputEnabled = true
 end

@@ -64,20 +64,20 @@ public partial class CoinPool : ContentView
 				() => PoolCapacity > 0
 			).Invoke();
 
-		WeakReferenceMessenger.Default.Register<PopCoinMessage>(this, (r, m) =>
+		WeakReferenceMessenger.Default.Register<PopCoinRequestMessage>(this, (r, m) =>
 		{
 			if (!m.RequestCoin.Equals(PooledCoin)) return;
-
-			//var coinImage = _coinImages.Pop();
 
 			m.Reply( PopCoinAsync() );
 		});
 
-		StrongReferenceMessenger.Default.Register<FillPoolMessage>(this, (r, m) =>
+		StrongReferenceMessenger.Default.Register<FillPoolRequestMessage>(this, (r, m) =>
 		{
 			//if (!m.PooledCoin.Equals(PooledCoin)) return;
 
-			FillPoolAsync();			
+			FillPoolAsync();
+
+			m.Reply(true);
 		});
 	}
 
