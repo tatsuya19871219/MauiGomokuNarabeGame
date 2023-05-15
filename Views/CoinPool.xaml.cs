@@ -73,7 +73,6 @@ public partial class CoinPool : ContentView
 
 		StrongReferenceMessenger.Default.Register<FillPoolRequestMessage>(this, (r, m) =>
 		{
-			//if (!m.PooledCoin.Equals(PooledCoin)) return;
 
 			FillPoolAsync();
 

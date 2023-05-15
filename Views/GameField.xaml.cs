@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using CommunityToolkit.Mvvm.Messaging;
 using MauiGomokuNarabeGame.Helpers;
 using MauiGomokuNarabeGame.Messages;
@@ -60,51 +61,93 @@ public partial class GameField : ContentView
 
         StrongReferenceMessenger.Default.Register<InsertCoinRequestMessage>(this, (r, m) =>
         {
-            var targetLane = m.TargetLane;
-
-            //Image coinImage = m.Value;
             Image coinImage = m.CoinImage;
-
-            coinImage.TranslationX = targetLane * CoinSize;
-            coinImage.TranslationY = Height - CoinSize*(_coinQueues[targetLane].Count + 1);
-
-            FieldGrid.Add(coinImage);
+            var targetLane = m.TargetLane;
 
             _coinQueues[targetLane].Enqueue(coinImage);
 
-            m.Reply(true);
+            var stackPosition = _coinQueues[targetLane].Count;
+            
+            m.Reply(InsertCoinAsync(coinImage, targetLane, stackPosition));
 
         });
 
         StrongReferenceMessenger.Default.Register<ClearFieldRequestMessage>(this, async (r, m) =>
         {
-            foreach (var queue in _coinQueues)
-            {
-                RemoveCoinsAsync(queue);
-            }
+            // foreach (var queue in _coinQueues)
+            // {
+            //     RemoveCoinsAsync(queue);
+            // }
 
-            await Task.Delay(0);
+            //await Task.Delay(0);
 
-            m.Reply(true);
+            //m.Reply(true);
+
+            m.Reply(RemoveCoinQueuesAsync(_coinQueues));
         });
 	}
 
-    async Task RemoveCoinsAsync(Queue<Image> queue)
+    async Task<bool> InsertCoinAsync(Image coinImage, int targetLane, int stackPosition)
+    {
+        double insertSpeedRatio = 3.0;
+
+        var x0 = targetLane * CoinSize;
+        var y0 = -100.0;
+
+        var x1 = x0;
+        var y1 = Height - CoinSize*stackPosition;
+
+        var length = (uint) (Math.Abs(y1-y0)/insertSpeedRatio);
+
+        coinImage.TranslationX = x0;
+        coinImage.TranslationY = y0;
+        
+        FieldGrid.Add(coinImage);
+
+        await coinImage.TranslateTo(x1, y1, length);
+
+        // coinImage.TranslationX = targetLane * CoinSize;
+        // coinImage.TranslationY = Height - CoinSize*(stackPosition);
+
+
+        //_coinQueues[targetLane].Enqueue(coinImage);
+
+        return true;
+    }
+
+    async Task<bool> RemoveCoinQueuesAsync(List<Queue<Image>> queues)
+    {
+        var results = new ConcurrentBag<bool>();
+
+        Parallel.ForEach(queues, async queue =>
+        {
+            results.Add( await RemoveCoinsAsync(queue) );
+
+            queue.Clear();
+        });
+
+        return results.All(r=>r);
+    }
+
+    async Task<bool> RemoveCoinsAsync(Queue<Image> queue)
     {
         while (queue.Count > 0)
         {
             var image = queue.Dequeue();
             
-            Task.Run(() => DropCoin(image));
+            await DropCoin(image);
             
             await Task.Delay(100);
         }
+
+        return queue.Count == 0;
     }
 
     async Task DropCoin(Image image)
     {
         await image.TranslateTo(image.TranslationX, image.TranslationY + Height, 250);
-        FieldGrid.Remove(image);
+
+        // FieldGrid.Remove(image);
     }
 
 }

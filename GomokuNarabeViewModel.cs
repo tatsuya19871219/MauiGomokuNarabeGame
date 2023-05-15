@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using MauiGomokuNarabeGame.Messages;
 using MauiGomokuNarabeGame.Models;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace MauiGomokuNarabeGame;
 
@@ -122,9 +123,10 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
         _gomokuNarabe.Reset();
 
-        // Async messages for await
         var t = StrongReferenceMessenger.Default.Send(new ClearFieldRequestMessage());
-        var result = await StrongReferenceMessenger.Default.Send(new FillPoolRequestMessage()).GetResponsesAsync();
+        var results = await StrongReferenceMessenger.Default.Send(new FillPoolRequestMessage()).GetResponsesAsync();
+
+        Debug.Assert(results.All(r=>r));
 
         await t;
 
