@@ -96,13 +96,13 @@ public partial class GomokuNarabeViewModel : ObservableObject
     [RelayCommand]
     async void SummonCoin(int laneIndex)
     {
-        InputEnabled = false;
-
         Coin coin = _gomokuNarabe.NextCoin;
 
         var success = _gomokuNarabe.TryPushAt(laneIndex);
 
         if (!success) return;
+        
+        InputEnabled = false;
 
         Image coinImage = await WeakReferenceMessenger.Default.Send(new PopCoinRequestMessage() { RequestCoin = coin });
 
