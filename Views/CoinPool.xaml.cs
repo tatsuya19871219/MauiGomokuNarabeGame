@@ -75,9 +75,6 @@ public partial class CoinPool : ContentView
 
 		StrongReferenceMessenger.Default.Register<FillPoolRequestMessage>(this, (r, m) =>
 		{
-
-			//FillPoolAsync();
-
 			m.Reply( FillPoolAsync() );
 		});
 	}
@@ -89,14 +86,12 @@ public partial class CoinPool : ContentView
 		var x = coinImage.TranslationX;
 		var y = coinImage.TranslationY;
 
-		coinImage.TranslateTo(x, y-50);
+		_ = coinImage.TranslateTo(x, y-50);
 		await coinImage.FadeTo(0);
 			
 		Pool.Remove(coinImage);
 
 		coinImage.Opacity = 1;
-
-		//await Task.Delay(100);
 
 		return coinImage;
 	}
@@ -135,7 +130,7 @@ public partial class CoinPool : ContentView
 
 			var animationTime = (uint)Math.Abs(Math.Round(y/50));
 
-			_ = Task.Run(() => coinImage.TranslateTo(x, y, animationTime));
+			_ = coinImage.TranslateTo(x, y, animationTime);
 			
 			await Task.Delay(100);
 

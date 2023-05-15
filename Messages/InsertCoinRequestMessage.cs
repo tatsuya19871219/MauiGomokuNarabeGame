@@ -4,6 +4,6 @@ namespace MauiGomokuNarabeGame.Messages;
 
 internal class InsertCoinRequestMessage : AsyncRequestMessage<bool>
 {
-    required public Image CoinImage { get; init; }
-    required public int TargetLane { get; init; }
+    required internal Image CoinImage { get; init; }
+    required internal int TargetLane { get; init; }
 }

@@ -2,6 +2,6 @@
 
 namespace MauiGomokuNarabeGame.Messages;
 
-public class ClearFieldRequestMessage : AsyncRequestMessage<bool>
+internal class ClearFieldRequestMessage : AsyncRequestMessage<bool>
 {
 }

@@ -4,7 +4,7 @@ namespace MauiGomokuNarabeGame.Messages;
 
 internal class InitializingMessage : ValueChangedMessage<object>
 {
-    public InitializingMessage(object value) : base(value)
+    internal InitializingMessage(object value) : base(value)
     {
     }
 }

@@ -126,19 +126,12 @@ public partial class GomokuNarabeViewModel : ObservableObject
     [RelayCommand]
     async void ResetGame()
     {
-        //var b = MainThread.IsMainThread;
-
-        //InputEnabled = false;
-        //WeakReferenceMessenger.Default.Send(new InitializingMessage(this));
-        //Parallel.ForEach(_gomokuNarabe.Lanes, lane => {
         foreach (var lane in _gomokuNarabe.Lanes)
         {
-
             WeakReferenceMessenger.Default.Send(
                 new LaneSelectorStateMessage(lane.LaneIndex){ MessageType = LaneSelectorStateMessage.Types.Hide }
             );
-        }
-        //});
+        }        
 
         _gomokuNarabe.Reset();
 
@@ -152,18 +145,14 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
         _ = await t;
 
-        await Task.Delay(100);
+        await Task.Delay(500);
 
-        //InputEnabled = true;
-        //WeakReferenceMessenger.Default.Send(new InitializedMessage(this));
-        //Parallel.ForEach(_gomokuNarabe.Lanes, lane => {
         foreach(var lane in _gomokuNarabe.Lanes)
         {
             WeakReferenceMessenger.Default.Send(
                 new LaneSelectorStateMessage(lane.LaneIndex){ MessageType = LaneSelectorStateMessage.Types.Show }
             );
         }
-        //});
 
     }
 

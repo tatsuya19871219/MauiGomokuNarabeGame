@@ -2,6 +2,6 @@
 
 namespace MauiGomokuNarabeGame.Messages;
 
-public class FillPoolRequestMessage : AsyncCollectionRequestMessage<bool>
+internal class FillPoolRequestMessage : AsyncCollectionRequestMessage<bool>
 {
 }
