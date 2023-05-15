@@ -58,9 +58,9 @@
                     <views:LaneSelector Grid.Row="0" Grid.Column="{Binding LaneIndex}"
                                         LaneIndex="{Binding LaneIndex}"
                                         SelectCommand="{Binding Source={x:RelativeSource AncestorType={x:Type local:GomokuNarabeViewModel}},
-                                                                Path=SummonCoinCommand}"
-                                        IsVisible="{Binding Source={x:RelativeSource AncestorType={x:Type local:GomokuNarabeViewModel}},
-                                                            Path=InputEnabled}"/>
+                                                                Path=SummonCoinCommand}"/>
+                                        <!-- IsVisible="{Binding Source={x:RelativeSource AncestorType={x:Type local:GomokuNarabeViewModel}},
+                                                            Path=InputEnabled}"/> -->
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
 

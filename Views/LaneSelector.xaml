@@ -15,6 +15,12 @@
 
     <VisualStateManager.VisualStateGroups>
         <VisualStateGroup>
+            <VisualState x:Name="Show">
+                <VisualState.Setters>
+                    <Setter TargetName="this" Property="IsVisible" Value="True"/>
+                    <Setter TargetName="SelectorArrow" Property="IsVisible" Value="True"/>
+                </VisualState.Setters>
+            </VisualState>
             <VisualState x:Name="Enable">
                 <VisualState.Setters>
                     <Setter TargetName="SelectorArrow" Property="IsVisible" Value="True"/>
@@ -25,10 +31,16 @@
                     <Setter TargetName="DisabledMark" Property="IsVisible" Value="True"/>
                 </VisualState.Setters>
             </VisualState>
+            <VisualState x:Name="Hide">
+                <VisualState.Setters>
+                    <Setter TargetName="this" Property="IsVisible" Value="False"/>
+                </VisualState.Setters>
+            </VisualState>
         </VisualStateGroup>
     </VisualStateManager.VisualStateGroups>
 
-    <Grid BackgroundColor="Transparent" 
+    <Grid x:Name="LaneSelectorGrid" 
+          BackgroundColor="Transparent" 
           BindingContext="{x:Reference this}" x:DataType="view:LaneSelector">
 
         <Grid.GestureRecognizers>

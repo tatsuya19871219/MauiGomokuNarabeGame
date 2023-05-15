@@ -49,6 +49,8 @@ public partial class CoinPool : ContentView
 
     Stack<Image> _coinImages = new();
 
+	bool _isFilling = false;
+
 	public CoinPool()
 	{
 		InitializeComponent();
@@ -74,9 +76,9 @@ public partial class CoinPool : ContentView
 		StrongReferenceMessenger.Default.Register<FillPoolRequestMessage>(this, (r, m) =>
 		{
 
-			FillPoolAsync();
+			//FillPoolAsync();
 
-			m.Reply(true);
+			m.Reply( FillPoolAsync() );
 		});
 	}
 
@@ -99,11 +101,6 @@ public partial class CoinPool : ContentView
 		return coinImage;
 	}
 
-    private void TranslateTo(double x, double v)
-    {
-        throw new NotImplementedException();
-    }
-
     void FillPool()
 	{
 		for (int i = _coinImages.Count; i < PoolCapacity; i++)
@@ -117,8 +114,12 @@ public partial class CoinPool : ContentView
 		if (CoinSize > 0) UpdateCoinTranslation();
 	}
 
-    async void FillPoolAsync()
+    async Task<bool> FillPoolAsync()
 	{
+		if (_isFilling) throw new Exception("I'm already filling");
+
+		_isFilling = true;
+
 		var coinPositionEnumerator = CoinPositionGenerator().GetEnumerator();
 
 		for (int i = 0; i < PoolCapacity; i++)
@@ -142,6 +143,12 @@ public partial class CoinPool : ContentView
 
 			Pool.Add(coinImage);
 		}
+
+		var coinCounts = _coinImages.Count;
+
+		_isFilling = false;
+
+		return coinCounts == PoolCapacity;
 		
 	}
 

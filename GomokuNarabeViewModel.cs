@@ -115,7 +115,7 @@ public partial class GomokuNarabeViewModel : ObservableObject
         var result = await StrongReferenceMessenger.Default.Send(new InsertCoinRequestMessage() { CoinImage = coinImage, TargetLane = laneIndex });
 
         if (_gomokuNarabe.Lanes[laneIndex].CurrentPosition == _fieldStacks)
-            StrongReferenceMessenger.Default.Send(new DisableLaneMessage("disable"){ TargetLane = laneIndex });
+            StrongReferenceMessenger.Default.Send(new LaneSelectorStateMessage(laneIndex){ MessageType = LaneSelectorStateMessage.Types.Disable });
 
         // Update next coin
         NextCoin = _gomokuNarabe.NextCoin;
@@ -128,20 +128,43 @@ public partial class GomokuNarabeViewModel : ObservableObject
     {
         //var b = MainThread.IsMainThread;
 
-        InputEnabled = false;
+        //InputEnabled = false;
         //WeakReferenceMessenger.Default.Send(new InitializingMessage(this));
+        //Parallel.ForEach(_gomokuNarabe.Lanes, lane => {
+        foreach (var lane in _gomokuNarabe.Lanes)
+        {
+
+            WeakReferenceMessenger.Default.Send(
+                new LaneSelectorStateMessage(lane.LaneIndex){ MessageType = LaneSelectorStateMessage.Types.Hide }
+            );
+        }
+        //});
 
         _gomokuNarabe.Reset();
 
         var t = StrongReferenceMessenger.Default.Send(new ClearFieldRequestMessage());
+
+        await Task.Delay(250);
+
         var results = await StrongReferenceMessenger.Default.Send(new FillPoolRequestMessage()).GetResponsesAsync();
 
         Debug.Assert(results.All(r=>r));
 
-        await t;
+        _ = await t;
 
-        InputEnabled = true;
+        await Task.Delay(100);
+
+        //InputEnabled = true;
         //WeakReferenceMessenger.Default.Send(new InitializedMessage(this));
+        //Parallel.ForEach(_gomokuNarabe.Lanes, lane => {
+        foreach(var lane in _gomokuNarabe.Lanes)
+        {
+            WeakReferenceMessenger.Default.Send(
+                new LaneSelectorStateMessage(lane.LaneIndex){ MessageType = LaneSelectorStateMessage.Types.Show }
+            );
+        }
+        //});
+
     }
 
 }

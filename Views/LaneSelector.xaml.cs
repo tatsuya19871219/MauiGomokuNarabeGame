@@ -1,4 +1,3 @@
-//using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using MauiGomokuNarabeGame.Messages;
@@ -42,17 +41,58 @@ public partial class LaneSelector : ContentView
 
         VisualStateManager.GoToState(this, "Enable");
 
-        StrongReferenceMessenger.Default.Register<DisableLaneMessage>(this, (r, m) =>
+        WeakReferenceMessenger.Default.Register<LaneSelectorStateMessage>(this, (r, m) =>
         {
-            if (m.TargetLane != LaneIndex) return;
+            if (m.Value != LaneIndex) return;
 
-            VisualStateManager.GoToState(this, "Disable");
+            // switch (m.MessageType)
+            // {                    
+            //     case LaneSelectorStateMessage.Types.Show:
+            //         VisualStateManager.GoToState(this, "Show");
+            //         break;
+
+            //     case LaneSelectorStateMessage.Types.Enable:
+            //         VisualStateManager.GoToState(this, "Enable");
+            //         break;
+
+            //     case LaneSelectorStateMessage.Types.Disable:
+                    
+            //         break;
+
+            //     case LaneSelectorStateMessage.Types.Hide:
+                    
+            //         break;
+
+            //     default:
+            //         throw new Exception("Unsupported message");
+
+            // }
+
+            var state = m.MessageType switch 
+            {
+                LaneSelectorStateMessage.Types.Show => "Show",
+                LaneSelectorStateMessage.Types.Enable => "Enable",
+                LaneSelectorStateMessage.Types.Disable => "Disable",
+                LaneSelectorStateMessage.Types.Hide => "Hide",
+                _ => throw new Exception("Unsupported message")
+            };
+
+            //var b = MainThread.IsMainThread;
+            VisualStateManager.GoToState(this, state);
+            //MainThread.BeginInvokeOnMainThread(() => VisualStateManager.GoToState(this, state));
         });
 
-        StrongReferenceMessenger.Default.Register<ClearFieldRequestMessage>(this, (r, m) =>
-        {
-            VisualStateManager.GoToState(this, "Enable");
-        });
+        // StrongReferenceMessenger.Default.Register<DisableLaneMessage>(this, (r, m) =>
+        // {
+        //     if (m.TargetLane != LaneIndex) return;
+
+        //     VisualStateManager.GoToState(this, "Disable");
+        // });
+
+        // StrongReferenceMessenger.Default.Register<ClearFieldRequestMessage>(this, (r, m) =>
+        // {
+        //     VisualStateManager.GoToState(this, "Enable");
+        // });
 	}
 
 

@@ -111,6 +111,8 @@ public partial class GameField : ContentView
             queue.Clear();
         });
 
+        await Task.Delay(0);
+
         return results.All(r=>r);
     }
 
