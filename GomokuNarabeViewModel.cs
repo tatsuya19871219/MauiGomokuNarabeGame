@@ -104,10 +104,8 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
         if (!success) return;
 
-        // Send message to animate coin Image
         Image coinImage = await WeakReferenceMessenger.Default.Send(new PopCoinRequestMessage() { RequestCoin = coin });
 
-        // TODO: awaitable
         var result = await StrongReferenceMessenger.Default.Send(new InsertCoinRequestMessage() { CoinImage = coinImage, TargetLane = laneIndex });
 
         // Update next coin

@@ -74,15 +74,6 @@ public partial class GameField : ContentView
 
         StrongReferenceMessenger.Default.Register<ClearFieldRequestMessage>(this, async (r, m) =>
         {
-            // foreach (var queue in _coinQueues)
-            // {
-            //     RemoveCoinsAsync(queue);
-            // }
-
-            //await Task.Delay(0);
-
-            //m.Reply(true);
-
             m.Reply(RemoveCoinQueuesAsync(_coinQueues));
         });
 	}
@@ -105,12 +96,6 @@ public partial class GameField : ContentView
         FieldGrid.Add(coinImage);
 
         await coinImage.TranslateTo(x1, y1, length);
-
-        // coinImage.TranslationX = targetLane * CoinSize;
-        // coinImage.TranslationY = Height - CoinSize*(stackPosition);
-
-
-        //_coinQueues[targetLane].Enqueue(coinImage);
 
         return true;
     }
@@ -146,8 +131,6 @@ public partial class GameField : ContentView
     async Task DropCoin(Image image)
     {
         await image.TranslateTo(image.TranslationX, image.TranslationY + Height, 250);
-
-        // FieldGrid.Remove(image);
     }
 
 }
