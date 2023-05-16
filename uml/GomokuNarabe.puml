@@ -61,10 +61,11 @@ GomokuNarabeViewModel --> GomokuNarabe
 
 boundary LaneSelector
 control ViewModel
+collections CoinPool
 
 
 group Initialize
-note over ViewModel : InputEnabled = false
+'note over ViewModel : InputEnabled = false
 Activate CoinPool
 Activate GameField
 CoinPool -> ViewModel : Initializing (Message)
@@ -74,12 +75,14 @@ CoinPool --> ViewModel : Initialized (Message)
 Deactivate CoinPool
 GameField --> ViewModel : Initialized (Message)
 Deactivate GameField
-note over ViewModel : InputEnabled = true
+'note over ViewModel : InputEnabled = true
 end
 
 group Coin insertion
 LaneSelector -> ViewModel : SummonCoin (ICommand)
-note over ViewModel : InputEnabled = false
+alt success case
+'note over ViewModel : InputEnabled = false
+ViewModel -> LaneSelector : Visible = false (Message)
 ViewModel -> CoinPool : PopCoin Request (Message)
 Activate CoinPool
 CoinPool --> ViewModel : Coin (Image)
@@ -89,14 +92,17 @@ Activate GameField
 GameField --> ViewModel : success (bool)
 Deactivate GameField
 opt Lane stack is full
-ViewModel -> LaneSelector : DisableLane (Message)
+ViewModel -> LaneSelector : Enable = false (Message)\nfor TargetLane
 end
-note over ViewModel : InputEnabled = true
+'note over ViewModel : InputEnabled = true
+ViewModel -> LaneSelector : Visible = true (Message)
+end
 end
 
 group Game reset
 GameField -> ViewModel : ResetGame (ICommand)
-note over ViewModel : InputEnabled = false
+'note over ViewModel : InputEnabled = false
+ViewModel -> LaneSelector : Visible = false (Message)
 ViewModel -> GameField : ClearField Request (Message)
 Activate GameField
 ViewModel --> ViewModel : Delay
@@ -106,7 +112,9 @@ GameField --> ViewModel : success (bool)
 Deactivate GameField
 CoinPool --> ViewModel : success (bool)
 Deactivate CoinPool
-note over ViewModel : InputEnabled = true
+'note over ViewModel : InputEnabled = true
+ViewModel -> LaneSelector : Enable = true (Message)
+ViewModel -> LaneSelector : Visible = true (Message)
 end
 
 @enduml
