@@ -25,3 +25,29 @@ internal class OnceAtTimeAction
         return true;
     }
 }
+
+internal class OnceAtTimeAction<T>
+{
+    bool _isRunning = false;
+    internal bool IsRunning => _isRunning;
+
+    Func<T, Task> _action;
+
+    public OnceAtTimeAction(Func<T, Task> action)
+    {
+        _action = action;
+    }
+
+    public async Task<bool> TryInvokeAsync(T param)
+    {
+        if (_isRunning) return false;
+
+        _isRunning = true;
+
+        await _action.Invoke(param);
+
+        _isRunning = false;
+
+        return true;
+    }
+}
