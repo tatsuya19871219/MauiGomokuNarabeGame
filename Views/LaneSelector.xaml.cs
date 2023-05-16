@@ -1,5 +1,6 @@
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using MauiGomokuNarabeGame.Helpers;
 using MauiGomokuNarabeGame.Messages;
 
 namespace MauiGomokuNarabeGame.Views;
@@ -25,9 +26,12 @@ public partial class LaneSelector : ContentView
 
     bool _isSummoning = false;
 
+    readonly OnceAtTimeAction _selectorAnimation;
+    readonly OnceAtTimeAction _disabledMarkAnimation;
+
     public LaneSelector()
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
 
         VisualStateManager.GoToState(LaneSelectorGrid, "Enable");
 
@@ -67,7 +71,10 @@ public partial class LaneSelector : ContentView
             VisualStateManager.GoToState(this, visible ? "Show" : "Hide");
         });
 
-	}
+        _selectorAnimation = new(SelectorFade);
+        _disabledMarkAnimation = new(DisabledMarkShake);
+
+    }
 
     private async void Selector_Tapped(object sender, TappedEventArgs e)
     {
@@ -77,7 +84,20 @@ public partial class LaneSelector : ContentView
 
         //if (SelectorArrow.IsAnimationPlaying) return;
 
-        var element = sender as VisualElement;
+        await _selectorAnimation.TryInvokeAsync();
+        
+    }
+
+    private async void DisabledMark_Tapped(object sender, TappedEventArgs e)
+    {
+        //if (DisabledMark.IsAnimationPlaying) return;
+
+        await _disabledMarkAnimation.TryInvokeAsync();
+    }
+
+    async Task SelectorFade()
+    {
+        var element = SelectorArrow as VisualElement;
 
         var x = element.TranslationX;
         var y = element.TranslationY;
@@ -95,15 +115,14 @@ public partial class LaneSelector : ContentView
         element.TranslationY = y;
     }
 
-    private async void DisabledMark_Tapped(object sender, TappedEventArgs e)
+    async Task DisabledMarkShake()
     {
-        //if (DisabledMark.IsAnimationPlaying) return;
-
-        var element = sender as VisualElement;
+        var element = DisabledMark as VisualElement;
 
         _ = element.ScaleTo(1.2, 100).ContinueWith((_) => element.ScaleTo(1, 100));
         await element.RelRotateTo(-30, 50);
         await element.RelRotateTo(60, 50);
         await element.RelRotateTo(-30, 50);
     }
+
 }
