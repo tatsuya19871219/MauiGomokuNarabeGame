@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using CommunityToolkit.Mvvm.Messaging;
 using MauiGomokuNarabeGame.Helpers;
 using MauiGomokuNarabeGame.Messages;
@@ -72,7 +73,7 @@ public partial class GameField : ContentView
 
         });
 
-        StrongReferenceMessenger.Default.Register<ClearFieldRequestMessage>(this, async (r, m) =>
+        StrongReferenceMessenger.Default.Register<ClearFieldRequestMessage>(this, (r, m) =>
         {
             m.Reply(RemoveCoinQueuesAsync(_coinQueues));
         });
@@ -104,16 +105,18 @@ public partial class GameField : ContentView
 
     async Task<bool> RemoveCoinQueuesAsync(List<Queue<Image>> queues)
     {
-        var results = new ConcurrentBag<bool>();
+        var tasks = new ConcurrentBag<Task<bool>>();
 
-        Parallel.ForEach(queues, async queue =>
+        Parallel.ForEach(queues, queue =>
         {
-            results.Add( await RemoveCoinsAsync(queue) );
-
-            queue.Clear();
+            tasks.Add( RemoveCoinsAsync(queue) );
         });
 
-        await Task.Delay(0);
+        await Task.WhenAll(tasks);
+
+        var results = tasks.Select(q => q.Result).ToArray();
+
+        FieldGrid.Clear();
 
         return results.All(r=>r);
     }
@@ -132,6 +135,8 @@ public partial class GameField : ContentView
         }
 
         await Task.WhenAll(tasks);
+
+        Debug.Assert(queue.Count == 0);
 
         return queue.Count == 0;
     }

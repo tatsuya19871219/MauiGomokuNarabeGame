@@ -17,15 +17,15 @@ public partial class MainPage : ContentPage
 		// DoSomething();
 	}
 
-	// async void DoSomething()
-	// {
+	async void DoSomething()
+	{
 		
-	// 	while (true)
-	// 	{
-	// 		//(GameScreen as IHotReloadableView).Reload();
-	// 		await Task.Delay(1000);
-	// 	}
-	// }
+		while (true)
+		{
+			//(GameScreen as IHotReloadableView).Reload();
+			await Task.Delay(1000);
+		}
+	}
 
 }
 
