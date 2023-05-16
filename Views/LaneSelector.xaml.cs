@@ -24,7 +24,7 @@ public partial class LaneSelector : ContentView
         set => SetValue(LaneIndexProperty, value);
     }
 
-    bool _isSummoning = false;
+    //bool _isSummoning = false;
 
     readonly OnceAtTimeAction _selectorAnimation;
     readonly OnceAtTimeAction _disabledMarkAnimation;
@@ -64,7 +64,7 @@ public partial class LaneSelector : ContentView
         WeakReferenceMessenger.Default.Register<LaneSelectorVisibleMessage>(this, (r, m) =>
         {
             if (m.TargetLane is int targetLane && targetLane != LaneIndex) return;
-            if (_isSummoning) return;
+            //if (_isSummoning) return;
 
             var visible = m.Value;
 
@@ -78,7 +78,7 @@ public partial class LaneSelector : ContentView
 
     private async void Selector_Tapped(object sender, TappedEventArgs e)
     {
-        _isSummoning = true;
+        //_isSummoning = true;
 
         SelectCommand.Execute(LaneIndex);
 
@@ -108,7 +108,7 @@ public partial class LaneSelector : ContentView
 
         VisualStateManager.GoToState(this, "Hide");
 
-        _isSummoning = false;
+        //_isSummoning = false;
 
         element.Opacity = 1;
         element.TranslationX = x;

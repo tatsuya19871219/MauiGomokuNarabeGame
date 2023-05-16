@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using MauiGomokuNarabeGame.Helpers;
 using MauiGomokuNarabeGame.Messages;
 using MauiGomokuNarabeGame.Models;
 using System.Collections.ObjectModel;
@@ -27,6 +28,8 @@ public partial class GomokuNarabeViewModel : ObservableObject
     GomokuNarabe _gomokuNarabe;
 
     Dictionary<object, bool> _isInitialized = new();
+
+    OnceAtTimeAction<int> _summonCoin;
 
     public GomokuNarabeViewModel()
     {
@@ -57,6 +60,8 @@ public partial class GomokuNarabeViewModel : ObservableObject
                 _isInitialized.Clear();
             }
         });
+
+        _summonCoin = new(SummonCoinAction);
     }
 
     public GomokuNarabeViewModel SetFieldSize(int fieldLanes, int fieldStacks)
@@ -102,13 +107,20 @@ public partial class GomokuNarabeViewModel : ObservableObject
     [RelayCommand]
     async void SummonCoin(int laneIndex)
     {
+        if (_summonCoin.IsRunning) return;
+
+        await _summonCoin.TryInvokeAsync(laneIndex); // Call SummonCoinAction
+
+    }
+
+    async Task SummonCoinAction(int laneIndex)
+    {
         Coin coin = _gomokuNarabe.NextCoin;
 
         var success = _gomokuNarabe.TryPushAt(laneIndex);
 
         if (!success) return;
-        
-        //InputEnabled = false;
+
         WeakReferenceMessenger.Default.Send(new LaneSelectorVisibleMessage(false));
 
         Image coinImage = await WeakReferenceMessenger.Default.Send(new PopCoinRequestMessage() { RequestCoin = coin });
@@ -116,13 +128,11 @@ public partial class GomokuNarabeViewModel : ObservableObject
         var result = await StrongReferenceMessenger.Default.Send(new InsertCoinRequestMessage() { CoinImage = coinImage, TargetLane = laneIndex });
 
         if (_gomokuNarabe.Lanes[laneIndex].CurrentPosition == _fieldStacks)
-            //StrongReferenceMessenger.Default.Send(new LaneSelectorStateMessage(laneIndex){ MessageType = LaneSelectorStateMessage.Types.Disable });
             WeakReferenceMessenger.Default.Send(new LaneSelectorEnableMessage(false) { TargetLane = laneIndex });
 
         // Update next coin
         NextCoin = _gomokuNarabe.NextCoin;
 
-        //InputEnabled = true;
         WeakReferenceMessenger.Default.Send(new LaneSelectorVisibleMessage(true));
     }
 

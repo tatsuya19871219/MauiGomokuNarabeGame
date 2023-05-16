@@ -87,31 +87,42 @@
         <Grid x:Name="StockAreaRed"
                 Grid.Row="0" Grid.RowSpan="2"
                 Grid.Column="0" BackgroundColor="LightPink">
+
+            <!--<Border StrokeThickness="10" Stroke="Orange"/>-->
+
             <views:CoinPool CoinImageFilename="coin_red.png" 
                             PoolCapacity="{StaticResource CoinPoolCapacity}" 
                             CoinSize="{Binding CoinSize}"
                             PooledCoin="{x:Static model:Coin.RedCoin}"/>
+            
+            <Grid x:Name="SelectorRed" BackgroundColor="White"/>
         </Grid>
 
         <Grid x:Name="StockAreaYellow"
                 Grid.Row="0" Grid.RowSpan="2"
                 Grid.Column="2" BackgroundColor="Yellow">
+
+            
             <views:CoinPool CoinImageFilename="coin_yellow.png" 
                             PoolCapacity="{StaticResource CoinPoolCapacity}" 
                             CoinSize="{Binding CoinSize}"
                             PooledCoin="{x:Static model:Coin.YellowCoin}"/>
+            
+            <Grid x:Name="SelectorYellow" BackgroundColor="White"/>
         </Grid>
 
         <Grid.Triggers>
             <DataTrigger TargetType="Grid"
                              Binding="{Binding NextCoin}"
                              Value="{x:Static model:Coin.RedCoin}">
-                <Setter TargetName="StockAreaYellow" Property="Opacity" Value="0.2"/>
+                <Setter TargetName="SelectorRed" Property="Opacity" Value="0"/>
+                <Setter TargetName="SelectorYellow" Property="Opacity" Value="0.8"/>
             </DataTrigger>
             <DataTrigger TargetType="Grid"
                              Binding="{Binding NextCoin}"
                              Value="{x:Static model:Coin.YellowCoin}">
-                <Setter TargetName="StockAreaRed" Property="Opacity" Value="0.2"/>
+                <Setter TargetName="SelectorRed" Property="Opacity" Value="0.8"/>
+                <Setter TargetName="SelectorYellow" Property="Opacity" Value="0"/>
             </DataTrigger>
         </Grid.Triggers>
 
