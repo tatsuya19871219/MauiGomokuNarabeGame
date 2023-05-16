@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using System.Diagnostics;
 using CommunityToolkit.Mvvm.Messaging;
 using MauiGomokuNarabeGame.Helpers;
@@ -104,13 +103,8 @@ public partial class GameField : ContentView
     }
 
     async Task<bool> RemoveCoinQueuesAsync(List<Queue<Image>> queues)
-    {
-        var tasks = new ConcurrentBag<Task<bool>>();
-
-        Parallel.ForEach(queues, queue =>
-        {
-            tasks.Add( RemoveCoinsAsync(queue) );
-        });
+    {        
+        var tasks = queues.Select(queue => RemoveCoinsAsync(queue));
 
         await Task.WhenAll(tasks);
 
