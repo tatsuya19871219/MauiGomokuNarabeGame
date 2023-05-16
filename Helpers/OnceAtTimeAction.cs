@@ -12,19 +12,6 @@ internal class OnceAtTimeAction
         _action = action;
     }
 
-    //public bool TryInvoke()
-    //{
-    //    if (_isRunning) return false;
-
-    //    _isRunning = true;
-
-    //    _action.Invoke();
-
-    //    _isRunning = false;
-
-    //    return true;
-    //}
-
     public async Task<bool> TryInvokeAsync()
     {
         if (_isRunning) return false;
