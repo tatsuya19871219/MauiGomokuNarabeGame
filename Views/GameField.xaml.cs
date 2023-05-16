@@ -82,11 +82,13 @@ public partial class GameField : ContentView
     {
         double insertSpeedRatio = 3.0;
 
-        var x0 = targetLane * CoinSize;
+        var (targetX, targetY) = GetCoinLocation(targetLane, stackPosition);
+
+        var x0 = targetX;
         var y0 = -100.0;
 
         var x1 = x0;
-        var y1 = Height - CoinSize*stackPosition;
+        var y1 = targetY;
 
         var length = (uint) (Math.Abs(y1-y0)/insertSpeedRatio);
 
@@ -139,4 +141,27 @@ public partial class GameField : ContentView
         await image.TranslateTo(image.TranslationX, image.TranslationY + Height, 250);
     }
 
+    private void ContentView_SizeChanged(object sender, EventArgs e)
+    {
+        if (Width <= 0 || Height <= 0) return;
+
+        foreach(var (queue, laneIndex) in _coinQueues.Select((queue,  index) => (queue, index)))
+        {
+            foreach (var (coin, stackPosition) in queue.Select((coin, index) => (coin, index+1)))
+            {
+                var (x, y) = GetCoinLocation(laneIndex, stackPosition);
+
+                coin.TranslationX = x;
+                coin.TranslationY = y;
+            }
+        }
+    }
+
+    Point GetCoinLocation(int lane, int stackPosition)
+    {
+        double x = lane * CoinSize; 
+        double y = Height - CoinSize*stackPosition;
+
+        return new(x, y);
+    }
 }
