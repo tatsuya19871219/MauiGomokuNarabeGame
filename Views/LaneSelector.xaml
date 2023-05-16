@@ -45,9 +45,7 @@
           BackgroundColor="Transparent" 
           BindingContext="{x:Reference this}" x:DataType="view:LaneSelector">
 
-        <Grid.GestureRecognizers>
-            <TapGestureRecognizer x:Name="MyGesture" Tapped="TapGestureRecognizer_Tapped"/>
-        </Grid.GestureRecognizers>
+        
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -66,9 +64,17 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <Image x:Name="SelectorArrow" Source="selector_arrow.png"/>
+        <Image x:Name="SelectorArrow" Source="selector_arrow.png">
+            <Image.GestureRecognizers>
+                <TapGestureRecognizer Tapped="Selector_Tapped"/>
+            </Image.GestureRecognizers>
+        </Image>
 
-        <Image x:Name="DisabledMark" Source="selector_disabled.png"/>
+        <Image x:Name="DisabledMark" Source="selector_disabled.png">
+            <Image.GestureRecognizers>
+                <TapGestureRecognizer Tapped="DisabledMark_Tapped"/>
+            </Image.GestureRecognizers>
+        </Image>
 
         <!-- <Label Text="{Binding LaneIndex}" FontSize="24"/> -->
 

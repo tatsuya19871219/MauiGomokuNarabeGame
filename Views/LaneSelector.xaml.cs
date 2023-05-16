@@ -23,6 +23,8 @@ public partial class LaneSelector : ContentView
         set => SetValue(LaneIndexProperty, value);
     }
 
+    bool _isSummoning = false;
+
     public LaneSelector()
 	{
 		InitializeComponent();
@@ -58,6 +60,7 @@ public partial class LaneSelector : ContentView
         WeakReferenceMessenger.Default.Register<LaneSelectorVisibleMessage>(this, (r, m) =>
         {
             if (m.TargetLane is int targetLane && targetLane != LaneIndex) return;
+            if (_isSummoning) return;
 
             var visible = m.Value;
 
@@ -66,8 +69,41 @@ public partial class LaneSelector : ContentView
 
 	}
 
-    private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
+    private async void Selector_Tapped(object sender, TappedEventArgs e)
     {
+        _isSummoning = true;
+
         SelectCommand.Execute(LaneIndex);
+
+        //if (SelectorArrow.IsAnimationPlaying) return;
+
+        var element = sender as VisualElement;
+
+        var x = element.TranslationX;
+        var y = element.TranslationY;
+
+        _ = element.ScaleTo(1.2, 100).ContinueWith((_) => element.ScaleTo(1, 100));
+        _ = element.TranslateTo(x, y - 25);
+        await element.FadeTo(0);
+
+        VisualStateManager.GoToState(this, "Hide");
+
+        _isSummoning = false;
+
+        element.Opacity = 1;
+        element.TranslationX = x;
+        element.TranslationY = y;
+    }
+
+    private async void DisabledMark_Tapped(object sender, TappedEventArgs e)
+    {
+        //if (DisabledMark.IsAnimationPlaying) return;
+
+        var element = sender as VisualElement;
+
+        _ = element.ScaleTo(1.2, 100).ContinueWith((_) => element.ScaleTo(1, 100));
+        await element.RelRotateTo(-30, 50);
+        await element.RelRotateTo(60, 50);
+        await element.RelRotateTo(-30, 50);
     }
 }
