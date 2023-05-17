@@ -7,12 +7,12 @@
              x:Class="MauiGomokuNarabeGame.Views.LaneSelector"
              x:Name="this">
 
-    <ContentView.Resources>
+    <!--<ContentView.Resources>
         <ResourceDictionary>
             <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
             <toolkit:VariableMultiValueConverter x:Key="TrueAllConverter" ConditionType="All"/>
         </ResourceDictionary>
-    </ContentView.Resources>
+    </ContentView.Resources>-->
 
     <VisualStateManager.VisualStateGroups>
         <VisualStateGroup>
@@ -59,6 +59,11 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
+        <Label x:Name="TapLabel" 
+               Text="Tap!" FontSize="Medium" 
+               TextColor="Black"
+               HorizontalOptions="Center" ZIndex="{OnPlatform Default=0, Android=1}"/>
+
         <Image x:Name="SelectorArrow" Source="selector_arrow.png">
             <Image.GestureRecognizers>
                 <TapGestureRecognizer Tapped="Selector_Tapped"/>
@@ -70,22 +75,6 @@
                 <TapGestureRecognizer Tapped="DisabledMark_Tapped"/>
             </Image.GestureRecognizers>
         </Image>
-
-        <Label x:Name="TapLabel" 
-               Text="Tap!" FontSize="Medium" 
-               TextColor="Black"
-               HorizontalOptions="Center">
-            <!--<Label.IsVisible>
-                <MultiBinding Converter="{StaticResource TrueAllConverter}">
-                    <Binding Source="{x:Reference SelectorArrow}" 
-                             Path="IsAnimationPlaying"
-                             Converter="{StaticResource InvertedBoolConverter}"/>
-                    <Binding Source="{x:Reference DisabledMark}"
-                             Path="IsVisible"
-                             Converter="{StaticResource InvertedBoolConverter}"/>
-                </MultiBinding>
-            </Label.IsVisible>-->
-        </Label>
 
         <!-- <Label Text="{Binding LaneIndex}" FontSize="24"/> -->
 

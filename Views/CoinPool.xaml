@@ -11,8 +11,7 @@
           HorizontalOptions="Start" VerticalOptions="Start">
 
 		<Grid.Resources>
-			<Style TargetType="views:CoinImage">
-                <!--<Setter Property="Source" Value="{Binding CoinImageFilename}"/>-->
+			<Style TargetType="views:CoinImage">                
                 <Setter Property="WidthRequest" Value="{Binding CoinSize}"/>
                 <Setter Property="HeightRequest" Value="{Binding CoinSize}"/>
             </Style>

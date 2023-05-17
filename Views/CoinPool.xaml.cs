@@ -21,6 +21,8 @@ public partial class CoinPool : ContentView
 		set => SetValue(CoinImageFilenameProperty, value);
 	}
 
+	//required public string CoinImageFilename { get; init; }
+
 	readonly int _poolCapacity;
 
 	required public int PoolCapacity 
