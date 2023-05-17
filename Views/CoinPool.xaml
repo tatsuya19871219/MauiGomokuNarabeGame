@@ -2,11 +2,21 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiGomokuNarabeGame.Views.CoinPool"
+             xmlns:views="clr-namespace:MauiGomokuNarabeGame.Views"
              SizeChanged="ContentView_SizeChanged"
              x:Name="this">
     <Grid x:Name="Pool"
+          x:DataType="views:CoinPool"
           BindingContext="{x:Reference this}"
           HorizontalOptions="Start" VerticalOptions="Start">
+
+		<Grid.Resources>
+			<Style TargetType="views:CoinImage">
+                <!--<Setter Property="Source" Value="{Binding CoinImageFilename}"/>-->
+                <Setter Property="WidthRequest" Value="{Binding CoinSize}"/>
+                <Setter Property="HeightRequest" Value="{Binding CoinSize}"/>
+            </Style>
+        </Grid.Resources>
         
     </Grid>
 </ContentView>
