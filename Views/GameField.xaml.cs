@@ -7,38 +7,17 @@ namespace MauiGomokuNarabeGame.Views;
 
 public partial class GameField : ContentView
 {
-    #region Properties
-    public static readonly BindableProperty StacksProperty
-        = BindableProperty.Create(nameof(Stacks), typeof(int), typeof(GameField));
+    #region Properties    
     public static readonly BindableProperty CoinSizeProperty
         = BindableProperty.Create(nameof(CoinSize), typeof(double), typeof(CoinPool));
-
-
-    public int Stacks
-    {
-        get => (int)GetValue(StacksProperty);
-        set
-        {
-            SetValue(StacksProperty, value);
-        }
-    }
-
     public double CoinSize
     {
         get => (double)GetValue(CoinSizeProperty);
         set => SetValue(CoinSizeProperty, value);
     }
-    
-    readonly int _lanes;
-    required public int Lanes
-    {
-        get => _lanes;
-        init
-        {
-            _lanes = value;
-            for (int i = 0; i < _lanes; i++) _coinQueues.Add(new());
-        }
-    }
+
+    required public int Stacks { get; init; }
+    required public int Lanes { get; init; }
 
     #endregion
 
@@ -53,9 +32,11 @@ public partial class GameField : ContentView
         new ConditionalAction(
                 action: () => 
                 {
+                    foreach(var _ in Enumerable.Range(0, Lanes)) _coinQueues.Add(new());
                     WeakReferenceMessenger.Default.Send(new InitializedMessage(this));
                 },
-                () => new[] {Stacks, Lanes}.All(value => value > 0)
+                () => new[] {Stacks, Lanes}.All(value => value > 0),
+                () => Lanes > 0
             ){ MillisecondsTimeout = 100 }.Invoke();
 
 

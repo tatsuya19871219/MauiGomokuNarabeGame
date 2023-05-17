@@ -7,6 +7,7 @@ namespace MauiGomokuNarabeGame.Views;
 
 public partial class LaneSelector : ContentView
 {
+    #region Properties
     public static readonly BindableProperty SelectCommandProperty =
         BindableProperty.Create(nameof(SelectCommand), typeof(ICommand), typeof(LaneSelector));
     public static readonly BindableProperty LaneIndexProperty =
@@ -23,6 +24,8 @@ public partial class LaneSelector : ContentView
         get => (int)GetValue(LaneIndexProperty);
         set => SetValue(LaneIndexProperty, value);
     }
+    
+    #endregion    
 
     bool _isSummoning = false;
 
@@ -66,8 +69,6 @@ public partial class LaneSelector : ContentView
 
         SelectCommand.Execute(LaneIndex);
 
-        //if (SelectorArrow.IsAnimationPlaying) return; // IsAnimationPlaying is for GIF!!
-
         await _selectorAnimation.TryInvokeAsync();
 
         _isSummoning = false;
@@ -76,8 +77,6 @@ public partial class LaneSelector : ContentView
 
     private async void DisabledMark_Tapped(object sender, TappedEventArgs e)
     {
-        //if (DisabledMark.IsAnimationPlaying) return;
-
         await _disabledMarkAnimation.TryInvokeAsync();
     }
 

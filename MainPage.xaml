@@ -59,8 +59,6 @@
                                         LaneIndex="{Binding LaneIndex}"
                                         SelectCommand="{Binding Source={x:RelativeSource AncestorType={x:Type local:GomokuNarabeViewModel}},
                                                                 Path=SummonCoinCommand}"/>
-                                        <!-- IsVisible="{Binding Source={x:RelativeSource AncestorType={x:Type local:GomokuNarabeViewModel}},
-                                                            Path=InputEnabled}"/> -->
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
 
@@ -87,8 +85,6 @@
         <Grid x:Name="StockAreaRed"
                 Grid.Row="0" Grid.RowSpan="2"
                 Grid.Column="0" BackgroundColor="LightPink">
-
-            <!--<Border StrokeThickness="10" Stroke="Orange"/>-->
 
             <views:CoinPool CoinImageFilename="coin_red.png" 
                             PoolCapacity="{StaticResource CoinPoolCapacity}" 

@@ -7,45 +7,18 @@ namespace MauiGomokuNarabeGame.Views;
 
 public partial class CoinPool : ContentView
 {
-    #region Properties
-    public static readonly BindableProperty CoinImageFilenameProperty
-		= BindableProperty.Create(nameof(CoinImageFilename), typeof(string), typeof(CoinPool));
+    #region Properties    
 	public static readonly BindableProperty CoinSizeProperty
 		= BindableProperty.Create(nameof(CoinSize), typeof(double), typeof(CoinPool));
-	public static readonly BindableProperty PooledCoinProperty
-		= BindableProperty.Create(nameof(PooledCoin), typeof(Coin), typeof(CoinPool));
-
-	public string CoinImageFilename
-	{
-		get => (string)GetValue(CoinImageFilenameProperty);
-		set => SetValue(CoinImageFilenameProperty, value);
-	}
-
-	//required public string CoinImageFilename { get; init; }
-
-	readonly int _poolCapacity;
-
-	required public int PoolCapacity 
-	{ 
-		get => _poolCapacity;
-		init
-		{
-			_poolCapacity = value;
-			FillPool();
-		}
-	}
-
 	public double CoinSize
 	{
 		get => (double)GetValue(CoinSizeProperty);
 		set => SetValue(CoinSizeProperty, value);
 	}
 
-	public Coin PooledCoin
-	{
-		get => (Coin)GetValue(PooledCoinProperty);
-		set => SetValue(PooledCoinProperty, value);
-	}
+	required public string CoinImageFilename { get; init; }
+	required public Coin PooledCoin { get; init; }
+	required public int PoolCapacity { get; init; }
 
     #endregion
 
@@ -57,11 +30,14 @@ public partial class CoinPool : ContentView
 	{
 		InitializeComponent();
 
+		//FillPool();
+
 		WeakReferenceMessenger.Default.Send(new InitializingMessage(this));
 
 		new ConditionalAction(
 				action: () => 
 				{
+					FillPool();
 					WeakReferenceMessenger.Default.Send(new InitializedMessage(this));
 				},
 				() => PooledCoin is not Coin.NullCoin,
