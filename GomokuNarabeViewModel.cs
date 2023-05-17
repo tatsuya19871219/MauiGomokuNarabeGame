@@ -20,39 +20,38 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
     public ObservableCollection<Lane> Lanes { get; set; } = new();
     [ObservableProperty] Coin _nextCoin;
-    //roperty] bool _inputEnabled;
 
     int? _fieldLanes;
     int? _fieldStacks;
 
     GomokuNarabe _gomokuNarabe;
 
-    // Dictionary<object, bool> _isInitialized = new();
-
     OnceAtTimeAction<int> _summonCoin;
+
+    Dictionary<object, bool> _isInitialized = new();
 
     public GomokuNarabeViewModel()
     {
 
-        // WeakReferenceMessenger.Default.Register<InitializingMessage>(this, (r, m) =>
-        // {
-        //     object key = m.Value;
+        WeakReferenceMessenger.Default.Register<InitializingMessage>(this, (r, m) =>
+        {
+            object key = m.Value;
 
-        //     if (_isInitialized.ContainsKey(key)) throw new Exception("Given key is already set.");
+            if (_isInitialized.ContainsKey(key)) throw new Exception("Given key is already set.");
 
-        //     _isInitialized[key] = false;
-        // });
+            _isInitialized[key] = false;
+        });
 
-        // WeakReferenceMessenger.Default.Register<InitializedMessage>(this, (r, m) =>
-        // {
-        //     object key = m.Value;
+        WeakReferenceMessenger.Default.Register<InitializedMessage>(this, (r, m) =>
+        {
+            object key = m.Value;
 
-        //     if (!_isInitialized.ContainsKey(key)) throw new IndexOutOfRangeException(nameof(_isInitialized));
+            if (!_isInitialized.ContainsKey(key)) throw new IndexOutOfRangeException(nameof(_isInitialized));
 
-        //     _isInitialized[key] = true;
+            _isInitialized[key] = true;
 
-        //     if (_isInitialized.Values.All(x=>x)) _isInitialized.Clear();
-        // });
+            if (_isInitialized.Values.All(x=>x)) _isInitialized.Clear();
+        });
 
         _summonCoin = new(SummonCoinAction);
     }
