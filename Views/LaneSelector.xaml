@@ -10,6 +10,7 @@
     <ContentView.Resources>
         <ResourceDictionary>
             <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+            <toolkit:VariableMultiValueConverter x:Key="TrueAllConverter" ConditionType="All"/>
         </ResourceDictionary>
     </ContentView.Resources>
 
@@ -18,21 +19,8 @@
             <VisualState x:Name="Show">
                 <VisualState.Setters>
                     <Setter TargetName="this" Property="IsVisible" Value="True"/>
-                    <!-- <Setter TargetName="SelectorArrow" Property="IsVisible" Value="True"/> -->
                 </VisualState.Setters>
             </VisualState>
-            <!-- <VisualState x:Name="Enable">
-                <VisualState.Setters>
-                    <Setter TargetName="SelectorArrow" Property="IsVisible" Value="True"/>
-                    <Setter TargetName="DisabledMark" Property="IsVisible" Value="False"/>
-                </VisualState.Setters>
-            </VisualState>
-            <VisualState x:Name="Disable">
-                <VisualState.Setters>
-                    <Setter TargetName="SelectorArrow" Property="IsVisible" Value="False"/>
-                    <Setter TargetName="DisabledMark" Property="IsVisible" Value="True"/>
-                </VisualState.Setters>
-            </VisualState> -->
             <VisualState x:Name="Hide">
                 <VisualState.Setters>
                     <Setter TargetName="this" Property="IsVisible" Value="False"/>
@@ -45,20 +33,27 @@
           BackgroundColor="Transparent" 
           BindingContext="{x:Reference this}" x:DataType="view:LaneSelector">
 
-        
-
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="Enable">
                     <VisualState.Setters>
                         <Setter TargetName="SelectorArrow" Property="IsVisible" Value="True"/>
                         <Setter TargetName="DisabledMark" Property="IsVisible" Value="False"/>
+                        <Setter TargetName="TapLabel" Property="IsVisible" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Summoning">
+                    <VisualState.Setters>
+                        <Setter TargetName="SelectorArrow" Property="IsVisible" Value="True"/>
+                        <Setter TargetName="DisabledMark" Property="IsVisible" Value="False"/>
+                        <Setter TargetName="TapLabel" Property="IsVisible" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Disable">
                     <VisualState.Setters>
                         <Setter TargetName="SelectorArrow" Property="IsVisible" Value="False"/>
                         <Setter TargetName="DisabledMark" Property="IsVisible" Value="True"/>
+                        <Setter TargetName="TapLabel" Property="IsVisible" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -75,6 +70,22 @@
                 <TapGestureRecognizer Tapped="DisabledMark_Tapped"/>
             </Image.GestureRecognizers>
         </Image>
+
+        <Label x:Name="TapLabel" 
+               Text="Tap!" FontSize="Medium" 
+               TextColor="Black"
+               HorizontalOptions="Center">
+            <!--<Label.IsVisible>
+                <MultiBinding Converter="{StaticResource TrueAllConverter}">
+                    <Binding Source="{x:Reference SelectorArrow}" 
+                             Path="IsAnimationPlaying"
+                             Converter="{StaticResource InvertedBoolConverter}"/>
+                    <Binding Source="{x:Reference DisabledMark}"
+                             Path="IsVisible"
+                             Converter="{StaticResource InvertedBoolConverter}"/>
+                </MultiBinding>
+            </Label.IsVisible>-->
+        </Label>
 
         <!-- <Label Text="{Binding LaneIndex}" FontSize="24"/> -->
 

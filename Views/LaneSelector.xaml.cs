@@ -24,7 +24,7 @@ public partial class LaneSelector : ContentView
         set => SetValue(LaneIndexProperty, value);
     }
 
-    //bool _isSummoning = false;
+    bool _isSummoning = false;
 
     readonly OnceAtTimeAction _selectorAnimation;
     readonly OnceAtTimeAction _disabledMarkAnimation;
@@ -35,22 +35,6 @@ public partial class LaneSelector : ContentView
 
         VisualStateManager.GoToState(LaneSelectorGrid, "Enable");
 
-        // WeakReferenceMessenger.Default.Register<LaneSelectorStateMessage>(this, (r, m) =>
-        // {
-        //     if (m.Value != LaneIndex) return;
-
-        //     var state = m.MessageType switch 
-        //     {
-        //         LaneSelectorStateMessage.Types.Show => "Show",
-        //         LaneSelectorStateMessage.Types.Enable => "Enable",
-        //         LaneSelectorStateMessage.Types.Disable => "Disable",
-        //         LaneSelectorStateMessage.Types.Hide => "Hide",
-        //         _ => throw new Exception("Unsupported message")
-        //     };
-
-        //     VisualStateManager.GoToState(this, state);
-        // });
-
         WeakReferenceMessenger.Default.Register<LaneSelectorEnableMessage>(this, (r, m) =>
         {
             if (m.TargetLane is int targetLane && targetLane != LaneIndex) return;
@@ -58,13 +42,12 @@ public partial class LaneSelector : ContentView
             var enable = m.Value;
 
             VisualStateManager.GoToState(LaneSelectorGrid, enable ? "Enable" : "Disable");
-            //VisualStateManager.GoToState(LaneSelectorGrid, "Disable");
         });
 
         WeakReferenceMessenger.Default.Register<LaneSelectorVisibleMessage>(this, (r, m) =>
         {
             if (m.TargetLane is int targetLane && targetLane != LaneIndex) return;
-            //if (_isSummoning) return;
+            if (_isSummoning) return;
 
             var visible = m.Value;
 
@@ -78,14 +61,17 @@ public partial class LaneSelector : ContentView
 
     private async void Selector_Tapped(object sender, TappedEventArgs e)
     {
-        //_isSummoning = true;
+        VisualStateManager.GoToState(LaneSelectorGrid, "Summoning");
+        _isSummoning = true;
 
         SelectCommand.Execute(LaneIndex);
 
-        //if (SelectorArrow.IsAnimationPlaying) return;
+        //if (SelectorArrow.IsAnimationPlaying) return; // IsAnimationPlaying is for GIF!!
 
         await _selectorAnimation.TryInvokeAsync();
-        
+
+        _isSummoning = false;
+        VisualStateManager.GoToState(LaneSelectorGrid, "Enable");
     }
 
     private async void DisabledMark_Tapped(object sender, TappedEventArgs e)
@@ -107,8 +93,6 @@ public partial class LaneSelector : ContentView
         await element.FadeTo(0);
 
         VisualStateManager.GoToState(this, "Hide");
-
-        //_isSummoning = false;
 
         element.Opacity = 1;
         element.TranslationX = x;
