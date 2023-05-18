@@ -12,19 +12,21 @@ class GomokuNarabeViewModel
     + FieldColumns : double <<Observable>>
     + Lanes : ObservableCollection<Lane> 
     + NextCoin : Coin <<Observable>>
+    ' - fieldLanes : int
+    ' - fieldStacks : int
     - gomokuNarabe : GomokuNarabe 
     + GomokuNarabeViewModel()
     + SetFieldSize(fieldLanes : int, fieldStacks : int) : GomokuNarabeViewModel
     - PageSizeChanged(pageSize : Size) : void <<RelayCommand>>
-    - SummonCoin(laneIndex : int) : void <<RelayCommand>>
-    - ResetGame() : void <<RelayCommand>>
+    - SummonCoin(laneIndex : int) : Task <<RelayCommand>>
+    - ResetGame() : Task <<RelayCommand>>
 }
 
 class GomokuNarabe
 {
     ~ NextCoin : Coin
-    - lanes : int
-    - stacks : int
+    - lanes : int <<read only>>
+    - stacks : int <<read only>>
     ~ Lanes : List<Lane>
     + GomokuNarabe(lanes : int, stacks : int, firstCoin : Coin)
     - PushAt(laneIndex : int) : void
@@ -34,6 +36,7 @@ class GomokuNarabe
 
 enum Coin
 {
+    NullCoin
     RedCoin
     YellowCoin
     {static} + Next(coin : this Coin) : Coin
@@ -42,8 +45,8 @@ enum Coin
 class Lane
 {
     + LaneIndex : int
-    - stacks : int
     + CanStack : bool
+    - stacks : int
     + StackedCoins : List<Coin>
     + CurrentPosition : int
     + Lane(laneIndex : int, stacks : int)
@@ -55,6 +58,8 @@ class Lane
 MainPage ..> GomokuNarabeViewModel : <use>
 GomokuNarabeViewModel --> GomokuNarabe
 
+GomokuNarabe *- Lane
+
 @enduml
 
 @startuml SequenceDiagram
@@ -63,9 +68,8 @@ boundary LaneSelector
 control ViewModel
 collections CoinPool
 
-
 group Initialize
-'note over ViewModel : InputEnabled = false
+
 Activate CoinPool
 Activate GameField
 CoinPool -> ViewModel : Initializing (Message)
@@ -75,13 +79,15 @@ CoinPool --> ViewModel : Initialized (Message)
 Deactivate CoinPool
 GameField --> ViewModel : Initialized (Message)
 Deactivate GameField
-'note over ViewModel : InputEnabled = true
+ViewModel -> LaneSelector : Visible = true (Message)
+
 end
 
 group Coin insertion
 LaneSelector -> ViewModel : SummonCoin (ICommand)
+activate LaneSelector
+
 alt success case
-'note over ViewModel : InputEnabled = false
 ViewModel -> LaneSelector : Visible = false (Message)
 ViewModel -> CoinPool : PopCoin Request (Message)
 Activate CoinPool
@@ -94,14 +100,14 @@ Deactivate GameField
 opt Lane stack is full
 ViewModel -> LaneSelector : Enable = false (Message)\nfor TargetLane
 end
-'note over ViewModel : InputEnabled = true
 ViewModel -> LaneSelector : Visible = true (Message)
 end
+
+deactivate LaneSelector
 end
 
 group Game reset
 GameField -> ViewModel : ResetGame (ICommand)
-'note over ViewModel : InputEnabled = false
 ViewModel -> LaneSelector : Visible = false (Message)
 ViewModel -> GameField : ClearField Request (Message)
 Activate GameField
@@ -112,7 +118,6 @@ GameField --> ViewModel : success (bool)
 Deactivate GameField
 CoinPool --> ViewModel : success (bool)
 Deactivate CoinPool
-'note over ViewModel : InputEnabled = true
 ViewModel -> LaneSelector : Enable = true (Message)
 ViewModel -> LaneSelector : Visible = true (Message)
 end
@@ -139,14 +144,8 @@ state OnGame {
     OnGame.InputDisabled --> OnGame.InputEnabled : SummonCoin end
 }
 
-' state Final {
-'     state "InputDisabled" as Final.InputDisabled
-'     state "InputEnabled" as Final.InputEnabled
-' }
-
 [*] -> Initial : On entry initialization
-Initial -> OnGame : Enable gesture recognizer
-OnGame --> Final : Disable gesture recognizer
-Final --> Initial : Clean game field, \n(Re)Fill coin pool
+Initial -> OnGame
+OnGame -> OnGame : Reset
 
 @enduml
