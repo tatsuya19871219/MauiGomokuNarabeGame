@@ -1,4 +1,5 @@
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using MauiGomokuNarabeGame.Helpers;
 using MauiGomokuNarabeGame.Messages;
@@ -9,13 +10,13 @@ public partial class LaneSelector : ContentView
 {
     #region Properties
     public static readonly BindableProperty SelectCommandProperty =
-        BindableProperty.Create(nameof(SelectCommand), typeof(ICommand), typeof(LaneSelector));
+        BindableProperty.Create(nameof(SelectCommand), typeof(IAsyncRelayCommand), typeof(LaneSelector));
     public static readonly BindableProperty LaneIndexProperty =
         BindableProperty.Create(nameof(LaneIndex), typeof(int), typeof(LaneSelector));
 
-    public ICommand SelectCommand
+    public IAsyncRelayCommand SelectCommand
     {
-        get => (ICommand)GetValue(SelectCommandProperty);
+        get => (IAsyncRelayCommand)GetValue(SelectCommandProperty);
         set => SetValue(SelectCommandProperty, value);
     }
 
@@ -46,7 +47,7 @@ public partial class LaneSelector : ContentView
 
             var enable = m.Value;
 
-            _canSummon = enable;
+            //_canSummon = enable;
 
             VisualStateManager.GoToState(LaneSelectorGrid, enable ? "Enable" : "Disable");
         });
@@ -54,7 +55,7 @@ public partial class LaneSelector : ContentView
         WeakReferenceMessenger.Default.Register<LaneSelectorVisibleMessage>(this, (r, m) =>
         {
             if (m.TargetLane is int targetLane && targetLane != LaneIndex) return;
-            if (_isSummoning) return;
+            //if (_isSummoning) return;
 
             var visible = m.Value;
 
@@ -68,16 +69,18 @@ public partial class LaneSelector : ContentView
 
     private async void Selector_Tapped(object sender, TappedEventArgs e)
     {
-        if (!_canSummon) return;
+        //if (!_canSummon) return;
 
         VisualStateManager.GoToState(LaneSelectorGrid, "Summoning");
-        _isSummoning = true;
+        //_isSummoning = true;
 
-        SelectCommand.Execute(LaneIndex);
+        var t = _selectorAnimation.TryInvokeAsync();
 
-        await _selectorAnimation.TryInvokeAsync();
+        //_isSummoning = false;
 
-        _isSummoning = false;
+        await SelectCommand.ExecuteAsync(LaneIndex);
+
+        await t;
     }
 
     private async void DisabledMark_Tapped(object sender, TappedEventArgs e)

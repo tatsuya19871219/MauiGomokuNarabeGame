@@ -100,14 +100,18 @@ public partial class GomokuNarabeViewModel : ObservableObject
         CoinSize = FieldHeight/stacks;
     }
 
-    [RelayCommand]
-    async void SummonCoin(int laneIndex)
+    [RelayCommand(CanExecute = nameof(CanSummon))]
+    async Task SummonCoin(int laneIndex)
     {
         if (_summonCoin.IsRunning) return;
 
         await _summonCoin.TryInvokeAsync(laneIndex); // Call SummonCoinAction
+    }
 
-
+    bool CanSummon(int laneIndex)
+    {
+        //return _gomokuNarabe.Lanes[laneIndex].CurrentPosition < _fieldStacks;
+        return _gomokuNarabe.Lanes[laneIndex].CanStack;
     }
 
     async Task SummonCoinAction(int laneIndex)
@@ -124,7 +128,8 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
         var result = await StrongReferenceMessenger.Default.Send(new InsertCoinRequestMessage() { CoinImage = coinImage, TargetLane = laneIndex });
 
-        var enable = _gomokuNarabe.Lanes[laneIndex].CurrentPosition < _fieldStacks;
+        //var enable = _gomokuNarabe.Lanes[laneIndex].CurrentPosition < _fieldStacks;
+        var enable = CanSummon(laneIndex);
         
         WeakReferenceMessenger.Default.Send(new LaneSelectorEnableMessage(enable) { TargetLane = laneIndex });
 
@@ -134,10 +139,10 @@ public partial class GomokuNarabeViewModel : ObservableObject
         WeakReferenceMessenger.Default.Send(new LaneSelectorVisibleMessage(true));
     }
 
-    [RelayCommand]
-    async void ResetGame()
+    [RelayCommand(CanExecute = nameof(CanReset))]
+    async Task ResetGame()
     {
-        if (_gomokuNarabe.Lanes.All(lane => lane.CurrentPosition == 0)) return;
+        //if (_gomokuNarabe.Lanes.All(lane => lane.CurrentPosition == 0)) return;
 
         WeakReferenceMessenger.Default.Send(new LaneSelectorVisibleMessage(false));        
 
@@ -157,6 +162,11 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
         WeakReferenceMessenger.Default.Send(new LaneSelectorEnableMessage(true));
         WeakReferenceMessenger.Default.Send(new LaneSelectorVisibleMessage(true));
+    }
+
+    bool CanReset()
+    {
+        return _gomokuNarabe.Lanes.Any(lane => lane.CurrentPosition > 0);
     }
 
 }

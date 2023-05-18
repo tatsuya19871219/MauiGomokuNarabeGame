@@ -55,24 +55,26 @@
         </VisualStateManager.VisualStateGroups>
 
         <Grid x:Name="EnabledGrid">
-            <Label x:Name="TapLabel" 
-               Text="Tap!" FontSize="Medium" 
-               TextColor="Black"
-               HorizontalOptions="Center" ZIndex="{OnPlatform Default=0, Android=1}"/>
 
-            <Image x:Name="SelectorArrow" Source="selector_arrow.png">
-                <Image.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="Selector_Tapped"/>
-                </Image.GestureRecognizers>
-            </Image>
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="Selector_Tapped"/>
+            </Grid.GestureRecognizers>
+            
+            <Image x:Name="SelectorArrow" Source="selector_arrow.png"/>
+                
+            <Label x:Name="TapLabel"
+                    Text="Tap!" FontSize="Medium" TextColor="Black"
+                    HorizontalOptions="Center"/>
         </Grid>
 
         <Grid x:Name="DisabledGrid" IsVisible="False">
-            <Image x:Name="DisabledMark" Source="selector_disabled.png">
-                <Image.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="DisabledMark_Tapped"/>
-                </Image.GestureRecognizers>
-            </Image>
+
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="DisabledMark_Tapped"/>
+            </Grid.GestureRecognizers>
+
+            <Image x:Name="DisabledMark" Source="selector_disabled.png"/>
+                    
         </Grid>
 
     </Grid>

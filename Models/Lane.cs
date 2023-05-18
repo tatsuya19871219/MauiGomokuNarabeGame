@@ -1,12 +1,13 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿//using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace MauiGomokuNarabeGame.Models;
 
-public partial class Lane : ObservableObject
+//public partial class Lane : ObservableObject
+public class Lane
 {
     public int LaneIndex { get; private set; }
-    //public bool CanStack { get; private set; }
-    [ObservableProperty] bool _canStack;
+    public bool CanStack { get; private set; }
+    //[ObservableProperty] bool _canStack;
 
     readonly int _stacks;
     public List<Coin> StackedCoins { get; init; } = new();
