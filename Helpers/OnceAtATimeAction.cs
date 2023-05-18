@@ -26,14 +26,14 @@ internal class OnceAtATimeAction
     }
 }
 
-internal class OnceAtTimeAction<T>
+internal class OnceAtATimeAction<T>
 {
     bool _isRunning = false;
     internal bool IsRunning => _isRunning;
 
     Func<T, Task> _action;
 
-    public OnceAtTimeAction(Func<T, Task> action)
+    public OnceAtATimeAction(Func<T, Task> action)
     {
         _action = action;
     }

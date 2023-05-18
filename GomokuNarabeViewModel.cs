@@ -26,7 +26,7 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
     GomokuNarabe _gomokuNarabe;
 
-    OnceAtTimeAction<int> _summonCoin;
+    OnceAtATimeAction<int> _summonCoin;
 
     Dictionary<object, bool> _isInitialized = new();
 
