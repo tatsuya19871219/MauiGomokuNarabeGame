@@ -28,6 +28,7 @@ public partial class LaneSelector : ContentView
     #endregion    
 
     bool _isSummoning = false;
+    bool _canSummon = true;
 
     readonly OnceAtTimeAction _selectorAnimation;
     readonly OnceAtTimeAction _disabledMarkAnimation;
@@ -36,6 +37,7 @@ public partial class LaneSelector : ContentView
     {
         InitializeComponent();
 
+        VisualStateManager.GoToState(this, "Hide");
         VisualStateManager.GoToState(LaneSelectorGrid, "Enable");
 
         WeakReferenceMessenger.Default.Register<LaneSelectorEnableMessage>(this, (r, m) =>
@@ -43,6 +45,8 @@ public partial class LaneSelector : ContentView
             if (m.TargetLane is int targetLane && targetLane != LaneIndex) return;
 
             var enable = m.Value;
+
+            _canSummon = enable;
 
             VisualStateManager.GoToState(LaneSelectorGrid, enable ? "Enable" : "Disable");
         });
@@ -64,6 +68,8 @@ public partial class LaneSelector : ContentView
 
     private async void Selector_Tapped(object sender, TappedEventArgs e)
     {
+        if (!_canSummon) return;
+
         VisualStateManager.GoToState(LaneSelectorGrid, "Summoning");
         _isSummoning = true;
 
@@ -72,7 +78,6 @@ public partial class LaneSelector : ContentView
         await _selectorAnimation.TryInvokeAsync();
 
         _isSummoning = false;
-        VisualStateManager.GoToState(LaneSelectorGrid, "Enable");
     }
 
     private async void DisabledMark_Tapped(object sender, TappedEventArgs e)

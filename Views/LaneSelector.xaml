@@ -37,46 +37,43 @@
             <VisualStateGroup>
                 <VisualState x:Name="Enable">
                     <VisualState.Setters>
-                        <Setter TargetName="SelectorArrow" Property="IsVisible" Value="True"/>
-                        <Setter TargetName="DisabledMark" Property="IsVisible" Value="False"/>
-                        <Setter TargetName="TapLabel" Property="IsVisible" Value="True"/>
+                        <Setter TargetName="EnabledGrid" Property="IsVisible" Value="True"/>                        
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Summoning">
-                    <VisualState.Setters>
-                        <Setter TargetName="SelectorArrow" Property="IsVisible" Value="True"/>
-                        <Setter TargetName="DisabledMark" Property="IsVisible" Value="False"/>
+                    <VisualState.Setters>                                        
                         <Setter TargetName="TapLabel" Property="IsVisible" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Disable">
                     <VisualState.Setters>
-                        <Setter TargetName="SelectorArrow" Property="IsVisible" Value="False"/>
-                        <Setter TargetName="DisabledMark" Property="IsVisible" Value="True"/>
-                        <Setter TargetName="TapLabel" Property="IsVisible" Value="False"/>
+                        <Setter TargetName="EnabledGrid" Property="IsVisible" Value="False"/>
+                        <Setter TargetName="DisabledGrid" Property="IsVisible" Value="True"/>                        
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <Label x:Name="TapLabel" 
+        <Grid x:Name="EnabledGrid">
+            <Label x:Name="TapLabel" 
                Text="Tap!" FontSize="Medium" 
                TextColor="Black"
                HorizontalOptions="Center" ZIndex="{OnPlatform Default=0, Android=1}"/>
 
-        <Image x:Name="SelectorArrow" Source="selector_arrow.png">
-            <Image.GestureRecognizers>
-                <TapGestureRecognizer Tapped="Selector_Tapped"/>
-            </Image.GestureRecognizers>
-        </Image>
+            <Image x:Name="SelectorArrow" Source="selector_arrow.png">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="Selector_Tapped"/>
+                </Image.GestureRecognizers>
+            </Image>
+        </Grid>
 
-        <Image x:Name="DisabledMark" Source="selector_disabled.png">
-            <Image.GestureRecognizers>
-                <TapGestureRecognizer Tapped="DisabledMark_Tapped"/>
-            </Image.GestureRecognizers>
-        </Image>
-
-        <!-- <Label Text="{Binding LaneIndex}" FontSize="24"/> -->
+        <Grid x:Name="DisabledGrid" IsVisible="False">
+            <Image x:Name="DisabledMark" Source="selector_disabled.png">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="DisabledMark_Tapped"/>
+                </Image.GestureRecognizers>
+            </Image>
+        </Grid>
 
     </Grid>
 

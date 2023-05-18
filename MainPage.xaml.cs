@@ -14,7 +14,7 @@ public partial class MainPage : ContentPage
 
 		BindingContext = vm.SetFieldSize(lanes, stacks);
 
-		// DoSomething();
+		DoSomething();
 	}
 
 	async void DoSomething()

@@ -50,7 +50,11 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
             _isInitialized[key] = true;
 
-            if (_isInitialized.Values.All(x=>x)) _isInitialized.Clear();
+            if (_isInitialized.Values.All(x=>x)) 
+            {
+                _isInitialized.Clear();
+                WeakReferenceMessenger.Default.Send(new LaneSelectorVisibleMessage(true));
+            }
         });
 
         _summonCoin = new(SummonCoinAction);
@@ -103,6 +107,7 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
         await _summonCoin.TryInvokeAsync(laneIndex); // Call SummonCoinAction
 
+
     }
 
     async Task SummonCoinAction(int laneIndex)
@@ -119,8 +124,9 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
         var result = await StrongReferenceMessenger.Default.Send(new InsertCoinRequestMessage() { CoinImage = coinImage, TargetLane = laneIndex });
 
-        if (_gomokuNarabe.Lanes[laneIndex].CurrentPosition == _fieldStacks)
-            WeakReferenceMessenger.Default.Send(new LaneSelectorEnableMessage(false) { TargetLane = laneIndex });
+        var enable = _gomokuNarabe.Lanes[laneIndex].CurrentPosition < _fieldStacks;
+        
+        WeakReferenceMessenger.Default.Send(new LaneSelectorEnableMessage(enable) { TargetLane = laneIndex });
 
         // Update next coin
         NextCoin = _gomokuNarabe.NextCoin;
