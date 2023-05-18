@@ -1,13 +1,13 @@
 ﻿namespace MauiGomokuNarabeGame.Helpers;
 
-internal class OnceAtTimeAction
+internal class OnceAtATimeAction
 {
     bool _isRunning = false;
     internal bool IsRunning => _isRunning;
 
     Func<Task> _action;
 
-    public OnceAtTimeAction(Func<Task> action)
+    public OnceAtATimeAction(Func<Task> action)
     {
         _action = action;
     }

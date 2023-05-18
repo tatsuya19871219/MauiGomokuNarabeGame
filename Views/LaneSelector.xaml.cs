@@ -31,8 +31,8 @@ public partial class LaneSelector : ContentView
     bool _isSummoning = false;
     bool _canSummon = true;
 
-    readonly OnceAtTimeAction _selectorAnimation;
-    readonly OnceAtTimeAction _disabledMarkAnimation;
+    readonly OnceAtATimeAction _selectorAnimation;
+    readonly OnceAtATimeAction _disabledMarkAnimation;
 
     public LaneSelector()
     {
