@@ -1,7 +1,7 @@
 # MauiGomokuNarabeGame
 A digital game board for Gomoku Narabe (五目並べ)
 
-https://github.com/tatsuya19871219/MauiGomokuNarabeGame/assets/7810461/480ae0fb-80e0-420d-ad89-a5629df30c1d
+https://github.com/tatsuya19871219/MauiGomokuNarabeGame/assets/7810461/c47bcff2-7e0b-415a-a0e8-2b0d3148d5f7
 
 ## What I learnt from this project
 
