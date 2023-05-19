@@ -49,7 +49,7 @@ public partial class CoinPool : ContentView
 			m.Reply( PopCoinAsync() );
 		});
 
-		StrongReferenceMessenger.Default.Register<FillPoolRequestMessage>(this, (r, m) =>
+		WeakReferenceMessenger.Default.Register<FillPoolRequestMessage>(this, (r, m) =>
 		{
 			m.Reply( FillPoolAsync() );
 		});

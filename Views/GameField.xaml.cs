@@ -40,7 +40,7 @@ public partial class GameField : ContentView
             ){ MillisecondsTimeout = 100 }.Invoke();
 
 
-        StrongReferenceMessenger.Default.Register<InsertCoinRequestMessage>(this, (r, m) =>
+        WeakReferenceMessenger.Default.Register<InsertCoinRequestMessage>(this, (r, m) =>
         {
             Image coinImage = m.CoinImage;
             var targetLane = m.TargetLane;
@@ -53,7 +53,7 @@ public partial class GameField : ContentView
 
         });
 
-        StrongReferenceMessenger.Default.Register<ClearFieldRequestMessage>(this, (r, m) =>
+        WeakReferenceMessenger.Default.Register<ClearFieldRequestMessage>(this, (r, m) =>
         {
             m.Reply(RemoveCoinQueuesAsync(_coinQueues));
         });

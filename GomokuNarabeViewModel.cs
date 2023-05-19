@@ -125,7 +125,7 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
         Image coinImage = await WeakReferenceMessenger.Default.Send(new PopCoinRequestMessage() { RequestCoin = coin });
 
-        var result = await StrongReferenceMessenger.Default.Send(new InsertCoinRequestMessage() { CoinImage = coinImage, TargetLane = laneIndex });
+        var result = await WeakReferenceMessenger.Default.Send(new InsertCoinRequestMessage() { CoinImage = coinImage, TargetLane = laneIndex });
        
         var enable = CanSummon(laneIndex);
         
@@ -144,11 +144,11 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
         _gomokuNarabe.Reset();
 
-        var t = StrongReferenceMessenger.Default.Send(new ClearFieldRequestMessage());
+        var t = WeakReferenceMessenger.Default.Send(new ClearFieldRequestMessage());
 
         await Task.Delay(250);
 
-        var results = await StrongReferenceMessenger.Default.Send(new FillPoolRequestMessage()).GetResponsesAsync();
+        var results = await WeakReferenceMessenger.Default.Send(new FillPoolRequestMessage()).GetResponsesAsync();
 
         Debug.Assert(results.All(r=>r));
 
