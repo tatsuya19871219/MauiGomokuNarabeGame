@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
+
 using MauiGomokuNarabeGame.Models;
 
 namespace MauiGomokuNarabeGame.Messages;

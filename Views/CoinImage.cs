@@ -1,6 +1,4 @@
-﻿using Microsoft.Maui.Controls;
-
-namespace MauiGomokuNarabeGame.Views;
+﻿namespace MauiGomokuNarabeGame.Views;
 
 internal class CoinImage : Image
 {

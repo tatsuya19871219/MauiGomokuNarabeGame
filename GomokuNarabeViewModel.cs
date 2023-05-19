@@ -109,8 +109,7 @@ public partial class GomokuNarabeViewModel : ObservableObject
     }
 
     bool CanSummon(int laneIndex)
-    {
-        //return _gomokuNarabe.Lanes[laneIndex].CurrentPosition < _fieldStacks;
+    {        
         return _gomokuNarabe.Lanes[laneIndex].CanStack;
     }
 
@@ -127,8 +126,7 @@ public partial class GomokuNarabeViewModel : ObservableObject
         Image coinImage = await WeakReferenceMessenger.Default.Send(new PopCoinRequestMessage() { RequestCoin = coin });
 
         var result = await StrongReferenceMessenger.Default.Send(new InsertCoinRequestMessage() { CoinImage = coinImage, TargetLane = laneIndex });
-
-        //var enable = _gomokuNarabe.Lanes[laneIndex].CurrentPosition < _fieldStacks;
+       
         var enable = CanSummon(laneIndex);
         
         WeakReferenceMessenger.Default.Send(new LaneSelectorEnableMessage(enable) { TargetLane = laneIndex });
@@ -141,9 +139,7 @@ public partial class GomokuNarabeViewModel : ObservableObject
 
     [RelayCommand(CanExecute = nameof(CanReset))]
     async Task ResetGame()
-    {
-        //if (_gomokuNarabe.Lanes.All(lane => lane.CurrentPosition == 0)) return;
-
+    {        
         WeakReferenceMessenger.Default.Send(new LaneSelectorVisibleMessage(false));        
 
         _gomokuNarabe.Reset();
