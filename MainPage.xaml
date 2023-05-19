@@ -72,7 +72,7 @@
                 HeightRequest="{Binding FieldHeight}">
 
             <Grid.GestureRecognizers>
-                <SwipeGestureRecognizer Direction="Down" Command="{Binding ResetGameCommand}"/>
+                <SwipeGestureRecognizer Direction="Up, Down" Command="{Binding ResetGameCommand}"/>
             </Grid.GestureRecognizers>
 
             <views:GameField Lanes="{StaticResource FieldLanes}" Stacks="{StaticResource FieldStacks}"
