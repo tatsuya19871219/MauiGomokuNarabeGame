@@ -30,8 +30,6 @@ public partial class CoinPool : ContentView
 	{
 		InitializeComponent();
 
-		//FillPool();
-
 		WeakReferenceMessenger.Default.Send(new InitializingMessage(this));
 
 		new ConditionalAction(
@@ -128,10 +126,6 @@ public partial class CoinPool : ContentView
 	Image GenerateCoin(double x = 0, double y = 0)
 	{
 		var coin = new CoinImage(CoinImageFilename) { TranslationX = x, TranslationY = y };
-
-		//coin.SetBinding(Image.SourceProperty, new Binding(nameof(CoinImageFilename), source: this));
-		//coin.SetBinding(Image.WidthRequestProperty, new Binding(nameof(CoinSize), source: this));
-		//coin.SetBinding(Image.HeightRequestProperty, new Binding(nameof(CoinSize), source: this));
 
 		return coin;
  	}
