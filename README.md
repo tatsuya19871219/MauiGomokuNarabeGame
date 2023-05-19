@@ -6,6 +6,7 @@ https://github.com/tatsuya19871219/MauiGomokuNarabeGame/assets/7810461/c47bcff2-
 ## What I learnt from this project
 
 - How to use [RelayCommand](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/mvvm/generators/relaycommand) Attribute
+- How to use MultiBinding
 - How to await a reply collection of RequestMessage from multiple subscribers
 
 ## UML
